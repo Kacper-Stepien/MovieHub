@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test
+    #url: jdbc:h2:file:./data/movies_db;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
+  # Liquibase, narzędzie do migracji schematu bazy danych, używa kontekstu dev do określenia, które zmiany mają być załadowane w środowisku rozwojowym.
+  liquibase:
+    contexts: dev
+    # Główna konfiguracja Liquibase. Wszystkie zmiany w schemacie bazy danych są opisane w pliku master.xml.
+    change-log: classpath:db/changelog/master.xml
+  web:
+    resources:
+      static-locations: classpath:/static/,file:./uploads/
+  h2:
+    console:
+      enabled: true
+app:
+  storage:
+    # Wskazuje miejsce, w którym aplikacja przechowuje pliki przesłane przez użytkowników. Jest to wykorzystywane np. przy dodawaniu plakatów filmów lub innych zasobów.
+    location: ./uploads/

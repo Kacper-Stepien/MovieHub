@@ -1,0 +1,10 @@
+insert into genre (name, description) values ('Dramat', 'Gatunek skupiający się na emocjonalnych i trudnych aspektach życia, ukazując głębię ludzkich doświadczeń.');
+insert into genre (name, description) values ('Komedia', 'Filmy pełne humoru i zabawnych sytuacji, mające na celu rozbawienie widza.');
+insert into genre (name, description) values ('Romans', 'Historie o miłości i relacjach międzyludzkich, często pełne emocji i wzruszeń.');
+insert into genre (name, description) values ('Thriller', 'Trzymające w napięciu opowieści z zaskakującymi zwrotami akcji i atmosferą tajemnicy.');
+insert into genre (name, description) values ('Dokumentalny', 'Filmy przedstawiające rzeczywistość, często skupiające się na faktach, wydarzeniach lub osobach.');
+insert into genre (name, description) values ('Akcja', 'Dynamiczne filmy pełne emocjonujących scen, walk i spektakularnych pościgów.');
+insert into genre (name, description) values ('Historyczny', 'Filmy ukazujące wydarzenia i postaci historyczne, często wiernie odtwarzające realia przeszłości.');
+insert into genre (name, description) values ('Science-Fiction', 'Historie osadzone w futurystycznych światach, eksplorujące zaawansowaną technologię i możliwości nauki.');
+insert into genre (name, description) values ('Musical', 'Filmy, w których ważnym elementem narracji są utwory muzyczne i choreografie.');
+insert into genre (name, description) values ('Horror', 'Przerażające historie mające na celu wywołanie strachu, często z elementami nadprzyrodzonymi.');
