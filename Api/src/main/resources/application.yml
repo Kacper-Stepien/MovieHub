@@ -5,3 +5,9 @@ spring:
       # w bazie danych jest zgodna z definicjami encji (klas oznaczonych jako @Entity).
       # Jeśli coś się nie zgadza (np. brak kolumny w tabeli), aplikacja nie uruchomi się.
       ddl-auto: validate
+  liquibase:
+    change-log: classpath:/db/changelog/master.xml
+app:
+  storage:
+    # Wskazuje miejsce, w którym aplikacja przechowuje pliki przesłane przez użytkowników. Jest to wykorzystywane np. przy dodawaniu plakatów filmów lub innych zasobów.
+    location: ./uploads/

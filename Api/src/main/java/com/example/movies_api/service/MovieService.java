@@ -71,6 +71,7 @@ public class MovieService {
         movie.setShortDescription(movieToSave.getShortDescription());
         movie.setDescription(movieToSave.getDescription());
         movie.setYoutubeTrailerId(movieToSave.getYoutubeTrailerId());
+
         Genre genre = genreRepository.findByNameIgnoreCase(movieToSave.getGenre())
                 .orElseThrow(() -> new ResourceNotFoundException(Messages.GENRE_NOT_FOUND));
         movie.setGenre(genre);
