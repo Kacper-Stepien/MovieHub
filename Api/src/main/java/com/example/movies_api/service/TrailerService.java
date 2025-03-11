@@ -3,10 +3,14 @@ package com.example.movies_api.service;
 import com.example.movies_api.dto.TrailerDto;
 import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.factory.VideoFactory;
+import com.example.movies_api.mapper.TrailerDtoMapper;
 import com.example.movies_api.model.Trailer;
 import com.example.movies_api.repository.TrailerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +37,11 @@ public class TrailerService {
                 trailer.getYoutubeTrailerId(),
                 trailer.getDescription(),
                 trailer.getThumbnail());
+    }
+
+    public List<TrailerDto> findAllTrailers() {
+        return trailerRepository.findAll().stream()
+                .map(TrailerDtoMapper::map)
+                .collect(Collectors.toList());
     }
 }
