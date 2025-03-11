@@ -7,6 +7,7 @@ import com.example.movies_api.dto.MovieSaveDto;
 import com.example.movies_api.dto.UpdateMovieDto;
 import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.exception.ResourceNotFoundException;
+import com.example.movies_api.factory.VideoFactory;
 import com.example.movies_api.mapper.MovieDtoMapper;
 import com.example.movies_api.model.Genre;
 import com.example.movies_api.model.Movie;
@@ -69,6 +70,9 @@ public class MovieService {
         if (movieRepository.findByTitle(movieToSave.getTitle()).isPresent()) {
             throw new BadRequestException(Messages.MOVIE_TITLE_EXISTS);
         }
+
+
+        /* //before using video factory
         Movie movie = new Movie();
         movie.setTitle(movieToSave.getTitle());
         movie.setOriginalTitle(movieToSave.getOriginalTitle());
@@ -77,6 +81,21 @@ public class MovieService {
         movie.setShortDescription(movieToSave.getShortDescription());
         movie.setDescription(movieToSave.getDescription());
         movie.setYoutubeTrailerId(movieToSave.getYoutubeTrailerId());
+        */
+
+
+        //using video factory
+        Movie movie = VideoFactory.createMovie(
+                movieToSave.getTitle(),
+                movieToSave.getOriginalTitle(),
+                movieToSave.getShortDescription(),
+                movieToSave.getDescription(),
+                movieToSave.getYoutubeTrailerId(),
+                movieToSave.getReleaseYear(),
+                movieToSave.isPromoted(),
+                "no_poster"
+                );
+
 
         Genre genre = genreRepository.findByNameIgnoreCase(movieToSave.getGenre())
                 .orElseThrow(() -> new ResourceNotFoundException(Messages.GENRE_NOT_FOUND));

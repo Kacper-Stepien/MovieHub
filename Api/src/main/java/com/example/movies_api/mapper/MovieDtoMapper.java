@@ -2,6 +2,7 @@ package com.example.movies_api.mapper;
 
 import com.example.movies_api.dto.MovieDto;
 import com.example.movies_api.dto.MovieGenresDto;
+import com.example.movies_api.factory.VideoFactory;
 import com.example.movies_api.model.Genre;
 import com.example.movies_api.model.Movie;
 import com.example.movies_api.model.Rating;
@@ -47,7 +48,25 @@ public class MovieDtoMapper {
     }
 
     public Movie map(MovieGenresDto movieDto) {
+        /*
         Movie movie = new Movie();
+        BeanUtils.copyProperties(movieDto, movie);
+        Genre genre = genreRepository.findByNameIgnoreCase(movieDto.getGenre()).get();
+        movie.setGenre(genre);
+        movie.setRatings(movieDto.getRatings());
+        return movie;*/
+
+        //use the factory method to create a movie object
+        Movie movie = VideoFactory.createMovie(
+                movieDto.getTitle(),
+                movieDto.getOriginalTitle(),
+                movieDto.getShortDescription(),
+                movieDto.getDescription(),
+                movieDto.getYoutubeTrailerId(),
+                movieDto.getReleaseYear(),
+                movieDto.isPromoted(),
+                movieDto.getPoster()
+        );
         BeanUtils.copyProperties(movieDto, movie);
         Genre genre = genreRepository.findByNameIgnoreCase(movieDto.getGenre()).get();
         movie.setGenre(genre);
