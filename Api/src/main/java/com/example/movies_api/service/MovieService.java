@@ -18,6 +18,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
+import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +30,7 @@ import static com.example.movies_api.constants.Messages.MOVIE_NOT_FOUND;
 public class MovieService {
     private final MovieRepository movieRepository;
     private final GenreRepository genreRepository;
-    private final FileStorageService fileStorageService;
+//    private final FileStorageService fileStorageService;
     private final MovieDtoMapper mapper;
 
     public List<MovieDto> findAllMovies() {
@@ -75,9 +77,17 @@ public class MovieService {
         Genre genre = genreRepository.findByNameIgnoreCase(movieToSave.getGenre())
                 .orElseThrow(() -> new ResourceNotFoundException(Messages.GENRE_NOT_FOUND));
         movie.setGenre(genre);
+
+        // Wykorzstanie Thread-safe Singleton z leniwą inicjalizacją (double-checked locking). /////////////////////////
         if (movieToSave.getPoster() != null) {
-            String savedFileName = fileStorageService.saveImage(movieToSave.getPoster());
-            movie.setPoster(savedFileName);
+            try {
+                FileStorageService storageService = FileStorageService.getInstance();
+                String savedFileName = storageService.saveImage(movieToSave.getPoster());
+                movie.setPoster(savedFileName);
+            }
+            catch(FileNotFoundException e) {
+                throw new UncheckedIOException(e);
+            }
         }
         return movieRepository.save(movie);
     }
