@@ -12,6 +12,7 @@ import com.example.movies_api.model.Genre;
 import com.example.movies_api.model.Movie;
 import com.example.movies_api.repository.GenreRepository;
 import com.example.movies_api.repository.MovieRepository;
+import com.example.movies_api.stats.StatsCollector;
 import com.example.movies_api.storage.FileStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +35,9 @@ public class MovieService {
     private final MovieDtoMapper mapper;
 
     public List<MovieDto> findAllMovies() {
+        // Wykorzystanie Singleton Eager Initialization. /////////////////////////////////////////////////////////////////
+        StatsCollector.getInstance().recordCall();
+
         return movieRepository.findAll().stream()
                 .map(MovieDtoMapper::map)
                 .toList();
