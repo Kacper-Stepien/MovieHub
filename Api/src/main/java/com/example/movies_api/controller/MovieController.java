@@ -5,6 +5,8 @@ import com.example.movies_api.service.MovieService;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,7 @@ import java.util.List;
 public class MovieController {
     private final MovieService movieService;
 
+    @Cacheable("movies")
     @GetMapping("/all")
     public ResponseEntity<List<MovieDto>> getAllMovies() {
         return ResponseEntity.ok(movieService.findAllMovies());
