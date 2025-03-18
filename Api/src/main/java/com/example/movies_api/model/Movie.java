@@ -1,5 +1,6 @@
 package com.example.movies_api.model;
 
+import com.example.movies_api.crew.CrewGroup;
 import com.example.movies_api.factory.Video;
 import jakarta.persistence.*;
 import lombok.*;
@@ -113,6 +114,10 @@ public class Movie implements Video {
     @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "crew_root_id")
+    private CrewGroup crewRoot;
+
     @Override
     public String getThumbnail() {
         return poster;
@@ -192,7 +197,7 @@ public class Movie implements Video {
         }
 
         public Movie build() {
-            return new Movie(null, title, originalTitle, shortDescription, description, youtubeTrailerId, releaseYear, null, promoted, poster, new HashSet<>(), new HashSet<>());
+            return new Movie(null, title, originalTitle, shortDescription, description, youtubeTrailerId, releaseYear, null, promoted, poster, new HashSet<>(), new HashSet<>(), null);
         }
     }
 }

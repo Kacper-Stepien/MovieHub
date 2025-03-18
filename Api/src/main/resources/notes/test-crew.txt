@@ -1,0 +1,23 @@
+1. Stwórz root ekipy dla filmu
+Metoda: POST
+Endpoint: http://localhost:8080/crew/init-root?movieId=5
+
+2. Dodaj podgrupę (np. „Aktorzy”) do root
+Metoda: POST
+Endpoint: http://localhost:8080/crew/add-group?parentGroupId=1&groupName=Aktorzy
+
+3. Dodaj kolejną podgrupę (np. „Główni”) w „Aktorzy”
+Metoda: POST
+Endpoint: http://localhost:8080/crew/add-group?parentGroupId=2&groupName=Główni
+
+4. Dodaj członka (liść) – np. Tom Hanks – do grupy „Główni”
+Metoda: POST
+Endpoint: http://localhost:8080/crew/add-member?parentGroupId=3&name=TomHanks&role=Aktor
+
+5. Wyświetl strukturę od root (ID=1)
+Metoda: GET
+Endpoint: http://localhost:8080/crew/1/show
+
+6. Policz członków w root
+Metoda: GET
+Endpoint: http://localhost:8080/crew/1/count
