@@ -2,7 +2,11 @@ package com.example.movies_api.controller;
 
 import com.example.movies_api.dto.MovieDto;
 import com.example.movies_api.service.MovieService;
+
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +18,7 @@ import java.util.List;
 public class MovieController {
     private final MovieService movieService;
 
+    @Cacheable("movies")
     @GetMapping("/all")
     public ResponseEntity<List<MovieDto>> getAllMovies() {
         return ResponseEntity.ok(movieService.findAllMovies());
@@ -41,4 +46,10 @@ public class MovieController {
 
         return ResponseEntity.ok(movieService.findAllWithFilters(genre, releaseYear, page - 1));
     }
+
+    @GetMapping("/error-test")
+    public void throwError() {
+        throw new EntityNotFoundException("Film nie zostal znaleziony");
+    }
+
 }

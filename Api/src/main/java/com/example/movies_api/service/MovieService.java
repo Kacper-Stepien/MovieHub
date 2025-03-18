@@ -18,6 +18,7 @@ import com.example.movies_api.storage.FileStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
@@ -135,6 +136,7 @@ public class MovieService {
         movieRepository.save(movie);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteMovie(long id) {
         if (!movieRepository.existsById(id)) {
             throw new ResourceNotFoundException(MOVIE_NOT_FOUND);

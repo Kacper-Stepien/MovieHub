@@ -53,4 +53,8 @@ public class RatingController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/error-test")
+    public ResponseEntity<String> throwError() {
+        throw new RuntimeException("Celowy blad w API");
+    }
 }
