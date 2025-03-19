@@ -34,6 +34,19 @@ public class GenreManagementController {
         return ResponseEntity.created(savedGenreUri).body(savedGenre);
     }
 
+    // Kompozyt 3 //////////////////////////////////////////////////////////////////////////////////////////////////////
+    @PostMapping("/create-subgenre")
+    public ResponseEntity<Long> createSubGenre(
+            @RequestParam Long parentId,
+            @RequestParam String name,
+            @RequestParam(required = false, defaultValue = "") String description
+    ) {
+        Genre child = genreService.createSubGenre(parentId, name, description);
+        return ResponseEntity.ok(child.getId());
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     @PatchMapping("/update-genre/{id}")
     ResponseEntity<?> updateGenre(@PathVariable Long id,@Valid @RequestBody JsonMergePatch patch) { // @RequestBody JsonMergePatch patch: JSON zawierający tylko dane do zmiany.
         try {

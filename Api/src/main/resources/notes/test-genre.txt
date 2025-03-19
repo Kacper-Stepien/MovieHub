@@ -1,0 +1,23 @@
+1. Stwórz root:
+Metoda: POST
+Endpoint: http://localhost:8080/admin/add-genre
+
+2. Dodaj subgatunek:
+Metoda: POST
+Endpoint: http://localhost:8080/admin/create-subgenre?parentId=1&name=HighFantasy&description=EpickieHistorie
+
+3. Dodaj podgatunek do #2:
+Metoda: POST
+Endpoint: http://localhost:8080/admin/create-subgenre?parentId=2&name=DarkFantasy&description=MrocznaFantastyka
+
+4. Wyświetl drzewo (root = #1):
+Metoda: GET
+Endpoint: http://localhost:8080/genres/1/show-tree
+
+5. Policz
+Metoda: GET
+Endpoint: http://localhost:8080/genres/1/count-subgenres
+
+6. Pobiera wszystkie gatunki z bazy z zagnieżdżonymi podgatunkami:
+Metoda: GET
+Endpoint: http://localhost:8080/genres/all-tree
