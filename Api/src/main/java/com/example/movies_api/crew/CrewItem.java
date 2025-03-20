@@ -2,6 +2,7 @@ package com.example.movies_api.crew;
 import com.example.movies_api.model.Movie;
 import jakarta.persistence.*;
 
+// Kompozyt 2 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "crew_type")

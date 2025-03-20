@@ -3,6 +3,7 @@ package com.example.movies_api.collection;
 import com.example.movies_api.model.User;
 import jakarta.persistence.*;
 
+// Kompozyt 1 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "collection_type")

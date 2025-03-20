@@ -17,7 +17,6 @@ import java.util.stream.StreamSupport;
 import static com.example.movies_api.constants.Messages.GENRE_EXISTS;
 import static com.example.movies_api.constants.Messages.GENRE_NOT_FOUND;
 
-// Kompozyt 3
 @Service
 @RequiredArgsConstructor
 public class GenreService {
