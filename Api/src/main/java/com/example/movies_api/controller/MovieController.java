@@ -1,6 +1,8 @@
 package com.example.movies_api.controller;
 
 import com.example.movies_api.dto.MovieDto;
+import com.example.movies_api.movie_data_provider.ExternalMovieProvider;
+import com.example.movies_api.movie_data_provider.LocalMovieProvider;
 import com.example.movies_api.service.MovieService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -17,11 +19,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MovieController {
     private final MovieService movieService;
+    private final LocalMovieProvider localMovieProvider;
+    private final ExternalMovieProvider externalMovieProvider;
 
-    @Cacheable("movies")
+    //@Cacheable("movies")
     @GetMapping("/all")
-    public ResponseEntity<List<MovieDto>> getAllMovies() {
-        return ResponseEntity.ok(movieService.findAllMovies());
+    public ResponseEntity<List<MovieDto>> getAllMovies(@RequestParam(required = false, defaultValue = "local")String source) {
+        return ResponseEntity.ok(movieService.getMovies(source));
     }
 
     @GetMapping("/promoted")

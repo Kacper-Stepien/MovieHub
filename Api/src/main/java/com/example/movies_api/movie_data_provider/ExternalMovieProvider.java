@@ -1,0 +1,25 @@
+package com.example.movies_api.movie_data_provider;
+
+
+import com.example.movies_api.dto.MovieDto;
+import com.example.movies_api.model.Movie;
+import com.example.movies_api.movie_data_provider.MovieProvider;
+import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.List;
+
+@Component
+public class ExternalMovieProvider implements MovieProvider {
+
+    @Override
+    public List<MovieDto> getMovies() {
+        // Simulated external API response
+        return Arrays.asList(
+                new MovieDto(1001L, "Interstellar", "Interstellar", "Short Sci-Fi Description",
+                        "Full Sci-Fi Description", "trailer123", 2014, "Sci-Fi", false, "poster_url", 8.6, 2000),
+                new MovieDto(1002L, "Inception", "Inception", "Short Thriller Description",
+                        "Full Thriller Description", "trailer456", 2010, "Thriller", false, "poster_url", 8.8, 2500)
+        );
+    }
+}
