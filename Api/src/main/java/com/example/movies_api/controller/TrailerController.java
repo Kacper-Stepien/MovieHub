@@ -14,7 +14,44 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+@RestController
+@RequestMapping("/trailers")
+public class TrailerController {
 
+    private final JsonTrailerAdapter jsonTrailerAdapter;
+    private final XmlTrailerAdapter xmlTrailerAdapter;
+    private final TrailerService trailerService;
+
+    public TrailerController(JsonTrailerAdapter jsonTrailerAdapter,XmlTrailerAdapter xmlTrailerAdapter,TrailerService trailerService) {
+        this.jsonTrailerAdapter = jsonTrailerAdapter;
+        this.xmlTrailerAdapter = xmlTrailerAdapter;
+        this.trailerService = trailerService;
+    }
+
+    // JSON: Add Trailer
+    @PostMapping(value = "/add", consumes = {"application/json", "application/xml"},produces = {"application/json", "application/xml"})
+    public ResponseEntity<String> addTrailer(@RequestBody TrailerDto trailer, @RequestHeader("Accept") String acceptHeader) throws Exception {
+        String response = "application/xml".equalsIgnoreCase(acceptHeader)
+                ? xmlTrailerAdapter.addTrailer(trailer)
+                : jsonTrailerAdapter.addTrailer(trailer);
+        URI savedTrailerUri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(trailer.getId())
+                .toUri();
+        return ResponseEntity.created(savedTrailerUri).body(response);
+    }
+
+
+    // JSON: Get all trailers
+    @GetMapping(value = "/all")
+    public ResponseEntity<List<TrailerDto>> getTrailers(@RequestParam(required = false, defaultValue = "local") String source) throws Exception {
+        return ResponseEntity.ok(trailerService.getTrailers(source));
+    }
+
+}
+
+/*
+// before trailer bridge (that bridge will get the external data if the client wants it)
 @RestController
 @RequestMapping("/trailers")
 public class TrailerController {
@@ -47,7 +84,7 @@ public class TrailerController {
         return ResponseEntity.ok(jsonTrailerAdapter.getAllTrailers());
     }
 
-}
+}*/
 
 /*
        //before trailer adapter

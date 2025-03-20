@@ -1,11 +1,15 @@
 package com.example.movies_api.service;
 
+import com.example.movies_api.dto.MovieDto;
 import com.example.movies_api.dto.TrailerDto;
 import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.factory.VideoFactory;
 import com.example.movies_api.mapper.TrailerDtoMapper;
 import com.example.movies_api.model.Trailer;
 import com.example.movies_api.repository.TrailerRepository;
+import com.example.movies_api.trailer_data_provider.ExternalTrailerProvider;
+import com.example.movies_api.trailer_data_provider.LocalTrailerProvider;
+import com.example.movies_api.trailer_data_provider.TrailerProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,9 @@ import java.util.stream.Collectors;
 public class TrailerService {
 
     private final TrailerRepository trailerRepository;
+
+    private final LocalTrailerProvider localTrailerProvider;
+    private final ExternalTrailerProvider externalTrailerProvider;
 
     public TrailerDto addTrailer(TrailerDto trailerDto) {
         if (trailerDto.getYoutubeTrailerId() == null || trailerDto.getYoutubeTrailerId().isEmpty()) {
@@ -39,9 +46,18 @@ public class TrailerService {
                 trailer.getThumbnail());
     }
 
+    //depricated -- after adding trailer bridge
     public List<TrailerDto> findAllTrailers() {
         return trailerRepository.findAll().stream()
                 .map(TrailerDtoMapper::map)
                 .collect(Collectors.toList());
+    }
+
+
+    public List<TrailerDto> getTrailers(String source) {
+        if (source.equalsIgnoreCase("external")) {
+            return externalTrailerProvider.getTrailers();
+        }
+        return localTrailerProvider.getTrailers();
     }
 }
