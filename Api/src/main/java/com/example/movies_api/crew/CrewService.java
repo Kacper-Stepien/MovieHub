@@ -1,5 +1,6 @@
 package com.example.movies_api.crew;
 
+import com.example.movies_api.flyweight.RoleName;
 import com.example.movies_api.model.Movie;
 import com.example.movies_api.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class CrewService {
         return movie.getCrewRoot().getId();
     }
 
-    public Long addCrewMember(Long parentGroupId, String name, String role) {
+    public Long addCrewMember(Long parentGroupId, String name, RoleName role) {
         CrewItem parent = crewItemRepository.findById(parentGroupId)
                 .orElseThrow(() -> new RuntimeException("Brak parenta=" + parentGroupId));
         if (!(parent instanceof CrewGroup group)) {

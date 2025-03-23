@@ -1,6 +1,9 @@
 package com.example.movies_api.crew;
 
+import com.example.movies_api.flyweight.RoleName;
+import com.example.movies_api.flyweight.RoleNameConverter;
 import com.example.movies_api.model.Movie;
+import jakarta.persistence.Convert;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
@@ -8,10 +11,14 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("MEMBER")
 public class CrewMember extends CrewItem {
 
-    private String role; // np. "Aktor", "Dźwiękowiec", "Reżyser"
+    // Flyweight 2 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //    private String role; // np. "Aktor", "Dźwiękowiec", "Reżyser"
+    @Convert(converter = RoleNameConverter.class)
+    private RoleName role;
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public CrewMember() {}
-    public CrewMember(String name, String role) {
+    public CrewMember(String name, RoleName role) {
         super(name);
         this.role = role;
     }
@@ -36,7 +43,7 @@ public class CrewMember extends CrewItem {
         return 1;
     }
 
-    public String getRole() {
+    public RoleName getRole() {
         return role;
     }
 }

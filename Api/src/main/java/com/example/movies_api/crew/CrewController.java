@@ -1,5 +1,6 @@
 package com.example.movies_api.crew;
 
+import com.example.movies_api.flyweight.RoleName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,8 @@ public class CrewController {
     public ResponseEntity<Long> addMember(@RequestParam Long parentGroupId,
                                           @RequestParam String name,
                                           @RequestParam String role) {
-        Long memberId = crewService.addCrewMember(parentGroupId, name, role);
+        RoleName roleName = RoleName.valueOf(role);
+        Long memberId = crewService.addCrewMember(parentGroupId, name, roleName);
         return ResponseEntity.ok(memberId);
     }
 
