@@ -3,6 +3,7 @@ package com.example.movies_api.service;
 import com.example.movies_api.dto.RatingDto;
 import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.exception.ResourceNotFoundException;
+import com.example.movies_api.flyweight.RatingValue;
 import com.example.movies_api.mapper.RatingDtoMapper;
 import com.example.movies_api.model.Movie;
 import com.example.movies_api.model.Rating;
@@ -33,7 +34,8 @@ public class RatingService {
                 .orElseThrow(() -> new ResourceNotFoundException(MOVIE_NOT_FOUND));
         ratingToSaveOrUpdate.setUser(user);
         ratingToSaveOrUpdate.setMovie(movie);
-        ratingToSaveOrUpdate.setRating(rating);
+//        ratingToSaveOrUpdate.setRating(rating);
+        ratingToSaveOrUpdate.setRating(RatingValue.of(rating));
         ratingRepository.save(ratingToSaveOrUpdate);
         return RatingDtoMapper.map(ratingToSaveOrUpdate);
     }

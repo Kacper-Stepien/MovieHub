@@ -1,5 +1,7 @@
 package com.example.movies_api.model;
 
+import com.example.movies_api.flyweight.RatingValue;
+import com.example.movies_api.flyweight.RatingValueConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,5 +27,6 @@ public class Rating {
     @JsonIgnore
     private Movie movie;
 
-    private Integer rating;
+    @Convert(converter = RatingValueConverter.class)
+    private RatingValue rating;
 }
