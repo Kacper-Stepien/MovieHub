@@ -30,6 +30,13 @@ public class MovieDtoMapper {
             movieDto.setGenre("Brak informacji");
         }
 
+        if (movie.getMovieType() != null) {
+            // np. bierzemy z flyweighta:
+            movieDto.setMovieType(movie.getMovieType().type());
+        } else {
+            movieDto.setMovieType(null);
+        }
+
         Set<Rating> ratings = movie.getRatings();
         if (ratings != null && !ratings.isEmpty()) {
             OptionalDouble avgRating = ratings.stream()

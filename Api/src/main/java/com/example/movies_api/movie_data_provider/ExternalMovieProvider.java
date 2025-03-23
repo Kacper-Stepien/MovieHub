@@ -17,9 +17,9 @@ public class ExternalMovieProvider implements MovieProvider {
         // Simulated external API response
         return Arrays.asList(
                 new MovieDto(1001L, "Interstellar", "Interstellar", "Short Sci-Fi Description",
-                        "Full Sci-Fi Description", "trailer123", 2014, "Sci-Fi", false, "poster_url", 8.6, 2000),
+                        "Full Sci-Fi Description", "trailer123", 2014, "Sci-Fi", false, "poster_url", 8.6, 2000, null),
                 new MovieDto(1002L, "Inception", "Inception", "Short Thriller Description",
-                        "Full Thriller Description", "trailer456", 2010, "Thriller", false, "poster_url", 8.8, 2500)
+                        "Full Thriller Description", "trailer456", 2010, "Thriller", false, "poster_url", 8.8, 2500, null)
         );
     }
 }

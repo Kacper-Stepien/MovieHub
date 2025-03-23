@@ -33,5 +33,6 @@ public class MovieDto {
     private String poster;
     private double avgRating;
     private int ratingCount;
+    private String movieType;
 }
 

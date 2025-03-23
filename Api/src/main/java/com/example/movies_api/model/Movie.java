@@ -2,6 +2,8 @@ package com.example.movies_api.model;
 
 import com.example.movies_api.crew.CrewGroup;
 import com.example.movies_api.factory.Video;
+import com.example.movies_api.flyweight.MovieType;
+import com.example.movies_api.flyweight.MovieTypeConverter;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -118,6 +120,9 @@ public class Movie implements Video {
     @JoinColumn(name = "crew_root_id")
     private CrewGroup crewRoot;
 
+    @Convert(converter = MovieTypeConverter.class)
+    private MovieType movieType;
+
     @Override
     public String getThumbnail() {
         return poster;
@@ -140,6 +145,7 @@ public class Movie implements Video {
         private String poster;
         private Set<Rating> ratings = new HashSet<>();
         private Set<Comment> comments = new HashSet<>();
+        private MovieType movieType;
 
         public MovieBuilder id(Long id) {
             this.id = id;
@@ -191,13 +197,37 @@ public class Movie implements Video {
             return this;
         }
 
+
         public MovieBuilder comments(Set<Comment> comments) {
             this.comments = comments;
             return this;
         }
 
+        public MovieBuilder movieType(MovieType mt) {
+            this.movieType = mt;
+            return this;
+        }
+
         public Movie build() {
-            return new Movie(null, title, originalTitle, shortDescription, description, youtubeTrailerId, releaseYear, null, promoted, poster, new HashSet<>(), new HashSet<>(), null);
+            Movie movie = new Movie(
+                    null,
+                    title,
+                    originalTitle,
+                    shortDescription,
+                    description,
+                    youtubeTrailerId,
+                    releaseYear,
+                    null,     // Genre
+                    promoted,
+                    poster,
+                    new HashSet<>(),
+                    new HashSet<>(),
+                    null   ,   // crewRoot
+                    this.movieType   // movieType
+            );
+
+            return movie;
+//            return new Movie(null, title, originalTitle, shortDescription, description, youtubeTrailerId, releaseYear, null, promoted, poster, new HashSet<>(), new HashSet<>(), null);
         }
     }
 }

@@ -30,4 +30,5 @@ public class MovieSaveDto {
     private boolean promoted;
     @NotNull
     private MultipartFile poster;
+    private String movieType;
 }
