@@ -149,4 +149,27 @@ public class CollectionService {
         return result;
     }
 
+    // Iterator 3 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    public List<CollectionItem> getFlattenedItems(Long rootId, String userEmail) {
+        User owner = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new BadRequestException("Nie znaleziono usera o email=" + userEmail));
+
+        CollectionItem root = collectionItemRepository.findById(rootId)
+                .orElseThrow(() -> new BadRequestException("Brak itemu=" + rootId));
+
+        if (!root.getOwner().equals(owner)) {
+            throw new BadRequestException("To nie jest Twoja kolekcja");
+        }
+
+        if (!(root instanceof CollectionGroup)) {
+            return List.of(root);
+        }
+
+        List<CollectionItem> flattened = new ArrayList<>();
+        for (CollectionItem item : (CollectionGroup) root) {
+            flattened.add(item);
+        }
+        return flattened;
+    }
+
 }
