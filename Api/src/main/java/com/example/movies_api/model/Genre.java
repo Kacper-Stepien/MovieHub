@@ -6,14 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Genre {
+public class Genre implements Iterable<Genre> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -58,5 +58,49 @@ public class Genre {
             total += child.countSubgenres();
         }
         return total;
+    }
+
+    // Iterator 1 //////////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public Iterator<Genre> iterator() {
+        return new GenreIterator(this);
+    }
+
+    private static class GenreIterator implements Iterator<Genre> {
+        private final Stack<Iterator<Genre>> stack = new Stack<>();
+
+        public GenreIterator(Genre root) {
+            // Rozpoczynamy iterację od root-a – tworzymy listę zawierającą tylko root
+            List<Genre> initial = new ArrayList<>();
+            initial.add(root);
+            stack.push(initial.iterator());
+        }
+
+        @Override
+        public boolean hasNext() {
+            while (!stack.isEmpty()) {
+                Iterator<Genre> current = stack.peek();
+                if (current.hasNext()) {
+                    return true;
+                } else {
+                    stack.pop();
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public Genre next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            Iterator<Genre> current = stack.peek();
+            Genre nextItem = current.next();
+            if (nextItem.getChildren() != null && !nextItem.getChildren().isEmpty()) {
+                // Dodajemy iterator dzieci do stosu
+                stack.push(nextItem.getChildren().iterator());
+            }
+            return nextItem;
+        }
     }
 }

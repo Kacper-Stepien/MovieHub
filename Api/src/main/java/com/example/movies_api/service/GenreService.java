@@ -75,6 +75,23 @@ public class GenreService {
         genreRepository.deleteById(id);
     }
 
+    // Iterator 1 użycie ///////////////////////////////////////////////////////////////////////////////////////////////
+    public List<Genre> getAllGenresFlattened() {
+        List<Genre> flattened = new ArrayList<>();
+        // Pobierz wszystkie rooty – czyli gatunki, których parent == null
+        List<Genre> roots = genreRepository.findAll().stream()
+                .filter(g -> g.getParent() == null)
+                .toList();
+        for (Genre root : roots) {
+            // Dzięki zaimplementowanemu iteratorowi, możemy iterować po całym drzewie
+            for (Genre g : root) {
+                flattened.add(g);
+            }
+        }
+        return flattened;
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     // Kompozyt 3 //////////////////////////////////////////////////////////////////////////////////////////////////////
     public Genre createSubGenre(Long parentId, String name, String description) {
         Genre parent = genreRepository.findById(parentId)

@@ -40,7 +40,7 @@ public class MovieDtoMapper {
         Set<Rating> ratings = movie.getRatings();
         if (ratings != null && !ratings.isEmpty()) {
             OptionalDouble avgRating = ratings.stream()
-                    .mapToDouble(Rating::getRating)
+                    .mapToDouble(r -> r.getRating().value())
                     .average();
 
             movieDto.setAvgRating(avgRating.orElse(0.0));
