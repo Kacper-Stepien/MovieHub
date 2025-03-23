@@ -6,6 +6,7 @@ import com.example.movies_api.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -73,5 +74,21 @@ public class CrewService {
         CrewItem item = crewItemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("Brak itemu=" + itemId));
         return item.countMembers();
+    }
+
+    // Iterator 2 użycie ///////////////////////////////////////////////////////////////////////////////////////////////
+    public List<CrewItem> getAllCrewItems(Long rootGroupId) {
+        CrewItem root = crewItemRepository.findById(rootGroupId)
+                .orElseThrow(() -> new RuntimeException("Brak root groupa=" + rootGroupId));
+
+        if (!(root instanceof CrewGroup group)) {
+            throw new RuntimeException("Root nie jest CrewGroup!");
+        }
+
+        List<CrewItem> flattened = new ArrayList<>();
+        for (CrewItem item : group) {
+            flattened.add(item);
+        }
+        return flattened;
     }
 }

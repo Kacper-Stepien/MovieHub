@@ -1,9 +1,12 @@
 package com.example.movies_api.crew;
 
+import com.example.movies_api.dto.CrewItemDto;
 import com.example.movies_api.flyweight.RoleName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/crew")

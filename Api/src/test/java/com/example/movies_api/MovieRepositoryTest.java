@@ -30,11 +30,11 @@ public class MovieRepositoryTest {
         boolean areAveragesSorted = true;
         for (int i = 0; i < topRatedMovies.size() - 1; i++) {
             double avgRatingCurrent = topRatedMovies.get(i).getRatings().stream()
-                    .mapToDouble(Rating::getRating)
+                    .mapToDouble(r -> r.getRating().value())
                     .average()
                     .getAsDouble();
             double avgRatingNext = topRatedMovies.get(i + 1).getRatings().stream()
-                    .mapToDouble(Rating::getRating)
+                    .mapToDouble(r -> r.getRating().value())
                     .average()
                     .getAsDouble();
             if (avgRatingCurrent < avgRatingNext) {

@@ -1,6 +1,7 @@
 package com.example.movies_api;
 
 import com.example.movies_api.dto.MovieDto;
+import com.example.movies_api.flyweight.RatingValue;
 import com.example.movies_api.mapper.MovieDtoMapper;
 import com.example.movies_api.model.Movie;
 import com.example.movies_api.model.Rating;
@@ -113,7 +114,7 @@ public class MovieServiceTest {
     private static Set<Rating> createRatings() {
         Set<Rating> ratings = new HashSet<>();
         ratings.add(Rating.builder()
-                .rating(4)
+                .rating(RatingValue.of(4))
                 .id(1L)
                 .build());
         return ratings;
