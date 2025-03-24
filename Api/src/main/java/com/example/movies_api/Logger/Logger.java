@@ -1,24 +1,16 @@
 package com.example.movies_api.Logger;
 
-import com.example.movies_api.stats.EventType;
-import com.example.movies_api.stats.Mediator;
+public class Logger {
+    private static final Logger INSTANCE = new Logger();
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-// Mediator 2 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-public class Logger implements Mediator {
-    private final List<LogRecord> logs = new ArrayList<>();
-
-    @Override
-    public void notify(Object sender, EventType eventType) {
-        LogRecord record = new LogRecord(eventType, LocalDateTime.now(), sender);
-        logs.add(record);
-        System.out.println("Logger: " + record);
+    private Logger() {
     }
 
-    public List<LogRecord> getLogs() {
-        return logs;
+    public static Logger getInstance() {
+        return INSTANCE;
+    }
+
+    public void log(String message) {
+        System.out.println("[LOG] " + message);
     }
 }

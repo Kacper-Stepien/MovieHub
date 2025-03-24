@@ -1,4 +1,4 @@
-package com.example.movies_api.stats;
+package com.example.movies_api.events;
 
 public enum EventType {
     COMMENT_ADDED,

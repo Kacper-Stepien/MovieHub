@@ -1,6 +1,7 @@
 package com.example.movies_api.service;
 
 import com.example.movies_api.dto.CommentDto;
+import com.example.movies_api.events.MediatorConfig;
 import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.exception.ResourceNotFoundException;
 import com.example.movies_api.mapper.CommentDtoMapper;
@@ -10,7 +11,7 @@ import com.example.movies_api.model.User;
 import com.example.movies_api.repository.CommentRepository;
 import com.example.movies_api.repository.MovieRepository;
 import com.example.movies_api.repository.UserRepository;
-import com.example.movies_api.stats.EventType;
+import com.example.movies_api.events.EventType;
 import com.example.movies_api.stats.StatsCollector;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class CommentService {
         commentToSaveOrUpdate.setContent(commentContent);
         commentRepository.save(commentToSaveOrUpdate);
         // Mediator 1 //////////////////////////////////////////////////////////////////////////////////////////////////
-        StatsCollector.getInstance().notify(this, EventType.COMMENT_ADDED);
+        MediatorConfig.MEDIATOR.notify(this, EventType.COMMENT_ADDED);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         return CommentDtoMapper.map(commentToSaveOrUpdate);
     }

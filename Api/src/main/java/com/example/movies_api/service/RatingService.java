@@ -1,6 +1,7 @@
 package com.example.movies_api.service;
 
 import com.example.movies_api.dto.RatingDto;
+import com.example.movies_api.events.MediatorConfig;
 import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.exception.ResourceNotFoundException;
 import com.example.movies_api.flyweight.RatingValue;
@@ -11,12 +12,10 @@ import com.example.movies_api.model.User;
 import com.example.movies_api.repository.MovieRepository;
 import com.example.movies_api.repository.RatingRepository;
 import com.example.movies_api.repository.UserRepository;
-import com.example.movies_api.stats.EventType;
+import com.example.movies_api.events.EventType;
 import com.example.movies_api.stats.StatsCollector;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 import static com.example.movies_api.constants.Messages.*;
 
@@ -40,7 +39,7 @@ public class RatingService {
         ratingToSaveOrUpdate.setRating(RatingValue.of(rating));
         ratingRepository.save(ratingToSaveOrUpdate);
         // Mediator 1 //////////////////////////////////////////////////////////////////////////////////////////////////
-        StatsCollector.getInstance().notify(this, EventType.RATING_ADDED);
+        MediatorConfig.MEDIATOR.notify(this, EventType.COMMENT_ADDED);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         return RatingDtoMapper.map(ratingToSaveOrUpdate);
     }
