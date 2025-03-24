@@ -10,6 +10,8 @@ import com.example.movies_api.model.User;
 import com.example.movies_api.repository.CommentRepository;
 import com.example.movies_api.repository.MovieRepository;
 import com.example.movies_api.repository.UserRepository;
+import com.example.movies_api.stats.EventType;
+import com.example.movies_api.stats.StatsCollector;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,9 @@ public class CommentService {
         commentToSaveOrUpdate.setMovie(movie);
         commentToSaveOrUpdate.setContent(commentContent);
         commentRepository.save(commentToSaveOrUpdate);
+        // Mediator 1 //////////////////////////////////////////////////////////////////////////////////////////////////
+        StatsCollector.getInstance().notify(this, EventType.COMMENT_ADDED);
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         return CommentDtoMapper.map(commentToSaveOrUpdate);
     }
 

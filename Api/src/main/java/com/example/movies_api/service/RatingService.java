@@ -11,6 +11,8 @@ import com.example.movies_api.model.User;
 import com.example.movies_api.repository.MovieRepository;
 import com.example.movies_api.repository.RatingRepository;
 import com.example.movies_api.repository.UserRepository;
+import com.example.movies_api.stats.EventType;
+import com.example.movies_api.stats.StatsCollector;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +39,9 @@ public class RatingService {
 //        ratingToSaveOrUpdate.setRating(rating);
         ratingToSaveOrUpdate.setRating(RatingValue.of(rating));
         ratingRepository.save(ratingToSaveOrUpdate);
+        // Mediator 1 //////////////////////////////////////////////////////////////////////////////////////////////////
+        StatsCollector.getInstance().notify(this, EventType.RATING_ADDED);
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         return RatingDtoMapper.map(ratingToSaveOrUpdate);
     }
 
