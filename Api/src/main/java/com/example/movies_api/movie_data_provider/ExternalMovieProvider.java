@@ -1,15 +1,15 @@
 package com.example.movies_api.movie_data_provider;
 
-
 import com.example.movies_api.dto.MovieDto;
 import com.example.movies_api.model.Movie;
-import com.example.movies_api.movie_data_provider.MovieProvider;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Component
+@Qualifier("externalMovieProvider")
 public class ExternalMovieProvider implements MovieProvider {
 
     @Override
