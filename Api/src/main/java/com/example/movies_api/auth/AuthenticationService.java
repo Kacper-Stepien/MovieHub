@@ -1,5 +1,6 @@
 package com.example.movies_api.auth;
 
+import com.example.movies_api.Logger.Logger;
 import com.example.movies_api.config.JwtService;
 import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.exception.InvalidCredentialsException;
@@ -8,6 +9,7 @@ import com.example.movies_api.model.User;
 import com.example.movies_api.model.UserRole;
 import com.example.movies_api.repository.RoleRepository;
 import com.example.movies_api.repository.UserRepository;
+import com.example.movies_api.stats.EventType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -44,6 +46,10 @@ public class AuthenticationService {
                 .roles(Set.of(userRole))
                 .build();
         userRepository.save(user);
+        // Mediator 2 //////////////////////////////////////////////////////////////////////////////////////////////////
+        Logger logger = new Logger();
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        logger.notify(this, EventType.NEW_ACCOUNT_CREATED);
         return AuthenticationResponse.builder().build();
     }
 
