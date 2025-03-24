@@ -1,13 +1,14 @@
 package com.example.movies_api.trailer_data_provider;
 
-import com.example.movies_api.trailer_data_provider.TrailerProvider;
 import com.example.movies_api.dto.TrailerDto;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Component
+@Qualifier("externalTrailerProvider")
 public class ExternalTrailerProvider implements TrailerProvider {
 
     @Override

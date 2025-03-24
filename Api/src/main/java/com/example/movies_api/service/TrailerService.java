@@ -6,6 +6,7 @@ import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.factory.VideoFactory;
 import com.example.movies_api.mapper.TrailerDtoMapper;
 import com.example.movies_api.model.Trailer;
+import com.example.movies_api.proxy.TrailerDataProxy;
 import com.example.movies_api.repository.TrailerRepository;
 import com.example.movies_api.trailer_data_provider.ExternalTrailerProvider;
 import com.example.movies_api.trailer_data_provider.LocalTrailerProvider;
@@ -24,6 +25,7 @@ public class TrailerService {
 
     private final LocalTrailerProvider localTrailerProvider;
     private final ExternalTrailerProvider externalTrailerProvider;
+    private final TrailerDataProxy trailerDataProxy;
 
     public TrailerDto addTrailer(TrailerDto trailerDto) {
         if (trailerDto.getYoutubeTrailerId() == null || trailerDto.getYoutubeTrailerId().isEmpty()) {
@@ -55,9 +57,10 @@ public class TrailerService {
 
 
     public List<TrailerDto> getTrailers(String source) {
+        // Using the proxy to get trailers
         if (source.equalsIgnoreCase("external")) {
-            return externalTrailerProvider.getTrailers();
+            return trailerDataProxy.getTrailersFromSource("external");
         }
-        return localTrailerProvider.getTrailers();
+        return trailerDataProxy.getTrailersFromSource("local");
     }
 }

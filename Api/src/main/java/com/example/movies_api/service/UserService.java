@@ -5,6 +5,7 @@ import com.example.movies_api.dto.UpdateUserDetailsDto;
 import com.example.movies_api.dto.UserDto;
 import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.exception.ResourceNotFoundException;
+import com.example.movies_api.proxy.UserServiceInterface;
 import com.example.movies_api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,11 +16,12 @@ import static com.example.movies_api.constants.Messages.USER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserServiceInterface {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Override
     public void updateUserDetails(String email, UpdateUserDetailsDto dto) {
         var user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
@@ -37,7 +39,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-
+    @Override
     public void updateUserPassword(String email, UpdatePasswordDto dto) {
         var user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
@@ -54,6 +56,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Override
     public UserDto getUserById(long userId) {
         var user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
