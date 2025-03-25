@@ -1,6 +1,7 @@
 package com.example.movies_api.controller;
 
 import com.example.movies_api.dto.MovieDto;
+import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.movie_data_provider.ExternalMovieProvider;
 import com.example.movies_api.movie_data_provider.LocalMovieProvider;
 import com.example.movies_api.service.MovieService;
@@ -49,6 +50,15 @@ public class MovieController {
                                                      @RequestParam(required = false, defaultValue = "1") int page) {
 
         return ResponseEntity.ok(movieService.findAllWithFilters(genre, releaseYear, page - 1));
+    }
+
+    @GetMapping("/query")
+    public ResponseEntity<List<MovieDto>> queryMovies(@RequestParam String expression) {
+        try {
+            return ResponseEntity.ok(movieService.findMoviesByQueryExpression(expression));
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid query expression: " + e.getMessage());
+        }
     }
 
     @GetMapping("/error-test")
