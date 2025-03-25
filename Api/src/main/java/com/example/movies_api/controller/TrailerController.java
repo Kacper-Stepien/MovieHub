@@ -5,6 +5,7 @@ import com.example.movies_api.controller.trailer_adapter.TrailerAdapter;
 import com.example.movies_api.controller.trailer_adapter.XmlTrailerAdapter;
 import com.example.movies_api.dto.TrailerDto;
 import com.example.movies_api.exception.BadRequestException;
+import com.example.movies_api.facade.trailer_facade.TrailerFacade;
 import com.example.movies_api.service.TrailerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -22,11 +23,13 @@ public class TrailerController {
     private final JsonTrailerAdapter jsonTrailerAdapter;
     private final XmlTrailerAdapter xmlTrailerAdapter;
     private final TrailerService trailerService;
+    private final TrailerFacade trailerFacade;
 
-    public TrailerController(JsonTrailerAdapter jsonTrailerAdapter,XmlTrailerAdapter xmlTrailerAdapter,TrailerService trailerService) {
+    public TrailerController(JsonTrailerAdapter jsonTrailerAdapter,XmlTrailerAdapter xmlTrailerAdapter,TrailerService trailerService,TrailerFacade trailerFacade) {
         this.jsonTrailerAdapter = jsonTrailerAdapter;
         this.xmlTrailerAdapter = xmlTrailerAdapter;
         this.trailerService = trailerService;
+        this.trailerFacade = trailerFacade;
     }
 
     // JSON: Add Trailer
@@ -64,6 +67,12 @@ public class TrailerController {
         }
     }
 
+
+    // Fasada – pobierz wszystkie trailery z logiką fallbacku
+    @GetMapping("/facade/all-trailer")
+    public ResponseEntity<List<TrailerDto>> getAllTrailersViaFacade() {
+        return ResponseEntity.ok(trailerFacade.getAllTrailers());
+    }
 }
 
 /*
