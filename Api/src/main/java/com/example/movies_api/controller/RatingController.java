@@ -2,9 +2,11 @@ package com.example.movies_api.controller;
 
 import com.example.movies_api.dto.RatingDto;
 import com.example.movies_api.dto.RatingRequestDto;
+import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.exception.ResourceNotFoundException;
 import com.example.movies_api.model.User;
 import com.example.movies_api.repository.UserRepository;
+import com.example.movies_api.service.RatingExpressionService;
 import com.example.movies_api.service.RatingService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -18,6 +20,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+/**
+ * Controller for rating-related operations
+ */
 @RestController
 @RequiredArgsConstructor
 @Validated
@@ -25,6 +30,7 @@ import java.net.URI;
 public class RatingController {
     private final RatingService ratingService;
     private final UserRepository userRepository;
+    private final RatingExpressionService ratingExpressionService;
 
     @PostMapping("/rate-movie")
     public ResponseEntity<RatingDto> addRating(@Valid @RequestBody RatingRequestDto ratingRequest) {
@@ -56,5 +62,15 @@ public class RatingController {
     @GetMapping("/error-test")
     public ResponseEntity<String> throwError() {
         throw new RuntimeException("Celowy blad w API");
+    }
+
+    @GetMapping("/evaluate")
+    public ResponseEntity<Double> evaluateExpression(@RequestParam String expression) {
+        try {
+            double result = ratingExpressionService.evaluateExpression(expression);
+            return ResponseEntity.ok(result);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid rating expression: " + e.getMessage());
+        }
     }
 }
