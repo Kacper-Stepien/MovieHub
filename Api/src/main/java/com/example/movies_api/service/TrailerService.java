@@ -4,6 +4,9 @@ import com.example.movies_api.dto.MovieDto;
 import com.example.movies_api.dto.TrailerDto;
 import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.factory.VideoFactory;
+import com.example.movies_api.interpreter.trailer_search.TrailerSearchContext;
+import com.example.movies_api.interpreter.trailer_search.TrailerSearchExpression;
+import com.example.movies_api.interpreter.trailer_search.TrailerSearchParser;
 import com.example.movies_api.mapper.TrailerDtoMapper;
 import com.example.movies_api.model.Trailer;
 import com.example.movies_api.proxy.TrailerDataProxy;
@@ -62,5 +65,25 @@ public class TrailerService {
             return trailerDataProxy.getTrailersFromSource("external");
         }
         return trailerDataProxy.getTrailersFromSource("local");
+    }
+
+    /**
+     * Search trailers using a query expression (Interpreter pattern)
+     * Example: "TITLE action OR DESCRIPTION exciting"
+     * 
+     * @param searchQuery the query expression to evaluate
+     * @param source the source of trailers (local or external)
+     * @return list of trailers that match the query
+     */
+    public List<TrailerDto> searchTrailers(String searchQuery, String source) {
+        // Get trailers to search through
+        List<TrailerDto> allTrailers = getTrailers(source);
+        TrailerSearchContext context = new TrailerSearchContext(allTrailers);
+        
+        // Parse the search query and interpret it
+        TrailerSearchParser parser = new TrailerSearchParser();
+        TrailerSearchExpression expression = parser.parse(searchQuery);
+        
+        return expression.interpret(context);
     }
 }

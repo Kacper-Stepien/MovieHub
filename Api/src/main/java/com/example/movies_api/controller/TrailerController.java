@@ -4,6 +4,7 @@ import com.example.movies_api.controller.trailer_adapter.JsonTrailerAdapter;
 import com.example.movies_api.controller.trailer_adapter.TrailerAdapter;
 import com.example.movies_api.controller.trailer_adapter.XmlTrailerAdapter;
 import com.example.movies_api.dto.TrailerDto;
+import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.service.TrailerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -46,6 +47,21 @@ public class TrailerController {
     @GetMapping(value = "/all")
     public ResponseEntity<List<TrailerDto>> getTrailers(@RequestParam(required = false, defaultValue = "local") String source) throws Exception {
         return ResponseEntity.ok(trailerService.getTrailers(source));
+    }
+
+    /**
+     * Search trailers using the Interpreter pattern
+     * Example query: "TITLE action OR DESCRIPTION exciting"
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<TrailerDto>> searchTrailers(
+            @RequestParam String query,
+            @RequestParam(required = false, defaultValue = "local") String source) {
+        try {
+            return ResponseEntity.ok(trailerService.searchTrailers(query, source));
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid search query: " + e.getMessage());
+        }
     }
 
 }
