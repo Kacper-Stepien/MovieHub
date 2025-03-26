@@ -8,6 +8,8 @@ import com.example.movies_api.interpreter.trailer_search.TrailerSearchContext;
 import com.example.movies_api.interpreter.trailer_search.TrailerSearchExpression;
 import com.example.movies_api.interpreter.trailer_search.TrailerSearchParser;
 import com.example.movies_api.mapper.TrailerDtoMapper;
+import com.example.movies_api.memento.trailer_memento.TrailerListCaretaker;
+import com.example.movies_api.memento.trailer_memento.TrailerListMemento;
 import com.example.movies_api.model.Trailer;
 import com.example.movies_api.proxy.TrailerDataProxy;
 import com.example.movies_api.repository.TrailerRepository;
@@ -29,7 +31,36 @@ public class TrailerService {
     private final LocalTrailerProvider localTrailerProvider;
     private final ExternalTrailerProvider externalTrailerProvider;
     private final TrailerDataProxy trailerDataProxy;
+    private final TrailerListCaretaker trailerListCaretaker;
 
+
+    public TrailerDto addTrailer(TrailerDto trailerDto) {
+        if (trailerDto.getYoutubeTrailerId() == null || trailerDto.getYoutubeTrailerId().isEmpty()) {
+            throw new BadRequestException("YouTube ID cannot be empty");
+        }
+
+        // 💾 Zapisz poprzedni stan
+        trailerListCaretaker.save(new TrailerListMemento(trailerRepository.findAll()));
+
+
+        Trailer trailer = VideoFactory.createTrailer(
+                trailerDto.getTitle(),
+                trailerDto.getYoutubeTrailerId(),
+                trailerDto.getDescription(),
+                trailerDto.getThumbnail()
+        );
+
+        trailer = trailerRepository.save(trailer);
+
+        return new TrailerDto(trailer.getId(),
+                trailer.getTitle(),
+                trailer.getYoutubeTrailerId(),
+                trailer.getDescription(),
+                trailer.getThumbnail());
+    }
+
+    /*
+        //copy from before implementing memento for trailer list restoring
     public TrailerDto addTrailer(TrailerDto trailerDto) {
         if (trailerDto.getYoutubeTrailerId() == null || trailerDto.getYoutubeTrailerId().isEmpty()) {
             throw new BadRequestException("YouTube ID cannot be empty");
@@ -50,6 +81,7 @@ public class TrailerService {
                 trailer.getDescription(),
                 trailer.getThumbnail());
     }
+    * */
 
     //depricated -- after adding trailer bridge
     public List<TrailerDto> findAllTrailers() {
@@ -86,4 +118,17 @@ public class TrailerService {
         
         return expression.interpret(context);
     }
+
+
+    //memento method for restoring trailer list
+    public void undoLastTrailerAdd() {
+        TrailerListMemento memento = trailerListCaretaker.getLastSnapshot();
+        if (memento != null) {
+            trailerRepository.deleteAll();
+            trailerRepository.saveAll(memento.getSavedState());
+        } else {
+            throw new IllegalStateException("Brak zapisanej poprzedniej wersji listy trailerów.");
+        }
+    }
+
 }

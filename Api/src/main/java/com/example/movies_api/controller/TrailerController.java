@@ -79,6 +79,19 @@ public class TrailerController {
     public ResponseEntity<List<TrailerDto>> getAllTrailersViaFacade() {
         return ResponseEntity.ok(trailerFacade.getAllTrailers());
     }
+
+
+    //memento - for trailer list restoring
+    @GetMapping("/undo-last-add")
+    public ResponseEntity<String> undoLastTrailerAdd() {
+        try {
+            trailerService.undoLastTrailerAdd();
+            return ResponseEntity.ok("Ostatni trailer został usunięty. Lista przywrócona.");
+        } catch (IllegalStateException ex) {
+            return ResponseEntity.badRequest().body("Brak operacji do cofnięcia.");
+        }
+    }
+
 }
 
 /*
