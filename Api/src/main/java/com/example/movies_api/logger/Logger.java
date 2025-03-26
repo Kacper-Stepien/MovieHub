@@ -1,4 +1,4 @@
-package com.example.movies_api.Logger;
+package com.example.movies_api.logger;
 
 public class Logger {
     private static final Logger INSTANCE = new Logger();

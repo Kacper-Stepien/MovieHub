@@ -1,6 +1,5 @@
 package com.example.movies_api.auth;
 
-import com.example.movies_api.Logger.Logger;
 import com.example.movies_api.config.JwtService;
 import com.example.movies_api.events.MediatorConfig;
 import com.example.movies_api.exception.BadRequestException;

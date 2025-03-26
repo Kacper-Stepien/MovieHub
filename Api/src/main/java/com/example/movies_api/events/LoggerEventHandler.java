@@ -1,6 +1,6 @@
 package com.example.movies_api.events;
 
-import com.example.movies_api.Logger.Logger;
+import com.example.movies_api.logger.Logger;
 
 // Mediator 2 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class LoggerEventHandler implements EventHandler {

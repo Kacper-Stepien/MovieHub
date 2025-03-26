@@ -1,5 +1,7 @@
 package com.example.movies_api.controller;
 
+import com.example.movies_api.command.LogCommand;
+import com.example.movies_api.command.trailer.LogTrailerCreateCommand;
 import com.example.movies_api.controller.trailer_adapter.JsonTrailerAdapter;
 import com.example.movies_api.controller.trailer_adapter.XmlTrailerAdapter;
 import com.example.movies_api.dto.TrailerDto;
@@ -35,6 +37,11 @@ public class TrailerController {
         String response = "application/xml".equalsIgnoreCase(acceptHeader)
                 ? xmlTrailerAdapter.addTrailer(trailer)
                 : jsonTrailerAdapter.addTrailer(trailer);
+
+        // Wzorzec Command – logowanie operacji
+        LogCommand logCommand = new LogTrailerCreateCommand(trailer);
+        logCommand.execute();
+
         URI savedTrailerUri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(trailer.getId())
