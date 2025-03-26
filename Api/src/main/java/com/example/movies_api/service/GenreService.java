@@ -7,6 +7,7 @@ import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.exception.ResourceNotFoundException;
 import com.example.movies_api.mapper.GenreDtoMapper;
 import com.example.movies_api.model.Genre;
+import com.example.movies_api.model.Movie;
 import com.example.movies_api.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

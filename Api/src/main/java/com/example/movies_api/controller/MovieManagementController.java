@@ -3,9 +3,11 @@ package com.example.movies_api.controller;
 
 import com.example.movies_api.controller.movie_management_adapter.JsonMovieManagementAdapter;
 import com.example.movies_api.controller.movie_management_adapter.XmlMovieManagementAdapter;
+import com.example.movies_api.dto.MovieCreationRequest;
 import com.example.movies_api.dto.MovieGenresDto;
 import com.example.movies_api.dto.MovieSaveDto;
 import com.example.movies_api.dto.UpdateMovieDto;
+import com.example.movies_api.facade.movie_facade.MovieFacade;
 import com.example.movies_api.model.Movie;
 import com.example.movies_api.service.MovieService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -33,10 +35,12 @@ public class MovieManagementController {
     private final JsonMovieManagementAdapter jsonAdapter;
     private final XmlMovieManagementAdapter xmlAdapter;
 
+    private final MovieFacade movieFacade;
 
-    public MovieManagementController(JsonMovieManagementAdapter jsonAdapter, XmlMovieManagementAdapter xmlAdapter) {
+    public MovieManagementController(JsonMovieManagementAdapter jsonAdapter, XmlMovieManagementAdapter xmlAdapter,MovieFacade movieFacade) {
         this.jsonAdapter = jsonAdapter;
         this.xmlAdapter = xmlAdapter;
+        this.movieFacade=movieFacade;
     }
 
     @PostMapping(value = "/add-movie", consumes = {"multipart/form-data"}, produces = "application/json")
@@ -71,6 +75,15 @@ public class MovieManagementController {
     public ResponseEntity<String> deleteMovie(@PathVariable long id, @RequestHeader("Accept") String acceptHeader) {
         String response = "application/xml".equalsIgnoreCase(acceptHeader) ? xmlAdapter.deleteMovie(id) : jsonAdapter.deleteMovie(id);
         return ResponseEntity.ok(response);
+    }
+
+
+    //facade for creating movie with genres and rating
+    @PostMapping("/create-full")
+    public ResponseEntity<String> createMovieWithRating(
+            @RequestBody MovieCreationRequest request) {
+        movieFacade.createMovieWithRating(request.getMovieDto(), request.getRatingDto());
+        return ResponseEntity.ok("Movie created with rating.");
     }
 }
 
