@@ -3,6 +3,7 @@ package com.example.movies_api.command.user;
 
 import com.example.movies_api.command.LogCommand;
 import com.example.movies_api.logger.CommandLogger;
+import com.example.movies_api.logger.FileLogWriter;
 
 public class LogUserPasswordChangeCommand implements LogCommand {
     private final String userEmail;
@@ -11,8 +12,11 @@ public class LogUserPasswordChangeCommand implements LogCommand {
         this.userEmail = userEmail;
     }
 
+
     @Override
-    public void execute() {
-        CommandLogger.log("users.log", "Zmieniono hasło użytkownika: " + userEmail);
+    public void execute(FileLogWriter writer) {
+        writer.writeToLog("users.log", "Zmieniono hasło użytkownika: " + userEmail);
     }
+
+
 }

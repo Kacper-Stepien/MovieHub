@@ -1,5 +1,7 @@
 package com.example.movies_api.logger;
 
+import com.example.movies_api.command.LogCommand;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -7,19 +9,9 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
 public class CommandLogger {
-    private static final String LOG_DIRECTORY = "api_logs";
+    private final FileLogWriter logWriter = new FileLogWriter();
 
-    public static void log(String logFileName, String message) {
-        try {
-            Files.createDirectories(Paths.get(LOG_DIRECTORY));
-            String logPath = LOG_DIRECTORY + "/" + logFileName;
-
-            try (FileWriter writer = new FileWriter(logPath, true)) {
-                writer.write(LocalDateTime.now() + " - " + message + "\n");
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void execute(LogCommand command) {
+        command.execute(logWriter);
     }
 }

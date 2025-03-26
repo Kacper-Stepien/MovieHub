@@ -6,6 +6,7 @@ import com.example.movies_api.command.user.LogUserPasswordChangeCommand;
 import com.example.movies_api.dto.UpdatePasswordDto;
 import com.example.movies_api.dto.UpdateUserDetailsDto;
 import com.example.movies_api.dto.UserDto;
+import com.example.movies_api.logger.FileLogWriter;
 import com.example.movies_api.proxy.UserServiceProxy;
 import com.example.movies_api.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -28,7 +29,8 @@ public class UserController {
         userServiceProxy.updateUserDetails(currentUserEmail, dto);
 
         LogCommand logCommand = new LogUserDetailsUpdateCommand(currentUserEmail);
-        logCommand.execute();
+        FileLogWriter writer = new FileLogWriter();
+        logCommand.execute(writer);
 
         return ResponseEntity.noContent().build();
     }
@@ -39,7 +41,8 @@ public class UserController {
         userServiceProxy.updateUserPassword(currentUserEmail, dto);
 
         LogCommand logCommand = new LogUserPasswordChangeCommand(currentUserEmail);
-        logCommand.execute();
+        FileLogWriter writer = new FileLogWriter();
+        logCommand.execute(writer);
 
         return ResponseEntity.noContent().build();
     }

@@ -4,6 +4,7 @@ package com.example.movies_api.command.user;
 import com.example.movies_api.command.LogCommand;
 import com.example.movies_api.logger.CommandLogger;
 import com.example.movies_api.auth.AuthenticationRequest;
+import com.example.movies_api.logger.FileLogWriter;
 
 public class LogUserLoginCommand implements LogCommand {
     private final String email;
@@ -18,10 +19,15 @@ public class LogUserLoginCommand implements LogCommand {
         this.email = extractEmailFromXml(xmlRequest);
     }
 
+
     @Override
-    public void execute() {
-        CommandLogger.log("users.log", "Zalogowano użytkownika: " + email);
+    public void execute(FileLogWriter writer) {
+        writer.writeToLog("users.log", "Zalogowano użytkownika: " + email);
     }
+
+
+
+
 
     // Prosty parser XML (dla testowych XML typu <email>xxx</email>)
     private String extractEmailFromXml(String xml) {

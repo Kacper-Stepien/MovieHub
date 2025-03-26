@@ -5,6 +5,7 @@ import com.example.movies_api.auth.adapter.XmlAuthenticationAdapter;
 import com.example.movies_api.command.LogCommand;
 import com.example.movies_api.command.user.LogUserLoginCommand;
 import com.example.movies_api.command.user.LogUserRegisterCommand;
+import com.example.movies_api.logger.FileLogWriter;
 import com.example.movies_api.service.ValidationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,8 @@ public class AuthenticationController {
         }
 
         LogCommand logCommand = new LogUserRegisterCommand(registerRequest);
-        logCommand.execute();
+        FileLogWriter writer = new FileLogWriter();
+        logCommand.execute(writer);
 
         return ResponseEntity.ok(authenticationService.register(registerRequest));
     }
@@ -54,7 +56,9 @@ public class AuthenticationController {
         }
 
         LogCommand logCommand = new LogUserLoginCommand(request);
-        logCommand.execute();
+        FileLogWriter writer = new FileLogWriter();
+        logCommand.execute(writer);
+
         return ResponseEntity.ok(jsonAdapter.authenticate(request));
     }
 
@@ -65,7 +69,9 @@ public class AuthenticationController {
     ) {
 
         LogCommand logCommand = new LogUserLoginCommand(xmlRequest);
-        logCommand.execute();
+        FileLogWriter writer = new FileLogWriter();
+        logCommand.execute(writer);
+
         return ResponseEntity.ok(xmlAdapter.authenticateXml(xmlRequest));
     }
 }

@@ -7,6 +7,7 @@ import com.example.movies_api.controller.trailer_adapter.XmlTrailerAdapter;
 import com.example.movies_api.dto.TrailerDto;
 import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.facade.trailer_facade.TrailerFacade;
+import com.example.movies_api.logger.FileLogWriter;
 import com.example.movies_api.service.TrailerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,8 @@ public class TrailerController {
 
         // Wzorzec Command – logowanie operacji
         LogCommand logCommand = new LogTrailerCreateCommand(trailer);
-        logCommand.execute();
+        FileLogWriter writer = new FileLogWriter();
+        logCommand.execute(writer);
 
         URI savedTrailerUri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
