@@ -1,5 +1,6 @@
 package com.example.movies_api.model;
 
+import com.example.movies_api.memento.user_memento.UserMemento;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -78,4 +79,17 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
+    //wzorzec pamiątka do zapisywania stanu obiektu użytkownika na wypadek gdyby chciał cofnąć wprowadzone zmiany:
+    public UserMemento saveToMemento() {
+        return new UserMemento(this.firstName, this.lastName, this.email);
+    }
+
+    public void restoreFromMemento(UserMemento memento) {
+        this.firstName = memento.getFirstName();
+        this.lastName = memento.getLastName();
+        this.email = memento.getEmail();
+    }
 }
+
