@@ -36,11 +36,16 @@ public class MovieManagementController {
     private final XmlMovieManagementAdapter xmlAdapter;
 
     private final MovieFacade movieFacade;
+    private final MovieService movieService;
 
-    public MovieManagementController(JsonMovieManagementAdapter jsonAdapter, XmlMovieManagementAdapter xmlAdapter,MovieFacade movieFacade) {
+    public MovieManagementController(JsonMovieManagementAdapter jsonAdapter,
+                                     XmlMovieManagementAdapter xmlAdapter,
+                                     MovieFacade movieFacade,
+                                     MovieService movieService) {
         this.jsonAdapter = jsonAdapter;
         this.xmlAdapter = xmlAdapter;
         this.movieFacade=movieFacade;
+        this.movieService=movieService;
     }
 
     @PostMapping(value = "/add-movie", consumes = {"multipart/form-data"}, produces = "application/json")
@@ -85,6 +90,18 @@ public class MovieManagementController {
         movieFacade.createMovieWithRating(request.getMovieDto(), request.getRatingDto());
         return ResponseEntity.ok("Movie created with rating.");
     }
+
+    //memento pattern for restoring movie list
+    @GetMapping("/undo-last-add")
+    public ResponseEntity<String> undoLastMovieAdd() {
+        try {
+            movieService.undoLastMovieAdd();
+            return ResponseEntity.ok("Operacja cofnięta – ostatnio dodany film został usunięty.");
+        } catch (IllegalStateException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Brak operacji do cofnięcia.");
+        }
+    }
+
 }
 
 /*

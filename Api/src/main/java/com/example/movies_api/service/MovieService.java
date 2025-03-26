@@ -9,6 +9,8 @@ import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.exception.ResourceNotFoundException;
 import com.example.movies_api.factory.VideoFactory;
 import com.example.movies_api.mapper.MovieDtoMapper;
+import com.example.movies_api.memento.movie_memento.MovieListCaretaker;
+import com.example.movies_api.memento.movie_memento.MovieListMemento;
 import com.example.movies_api.model.Genre;
 import com.example.movies_api.model.Movie;
 import com.example.movies_api.movie_data_provider.ExternalMovieProvider;
@@ -45,6 +47,9 @@ public class MovieService {
     private final LocalMovieProvider localMovieProvider;
     private final ExternalMovieProvider externalMovieProvider;
     private final MovieDataProxy movieDataProxy;
+
+    private final MovieListCaretaker movieListCaretaker;
+
 
     // before using the proxy
     // public List<MovieDto> getMovies(String source) {
@@ -95,6 +100,9 @@ public class MovieService {
             throw new BadRequestException(Messages.MOVIE_TITLE_EXISTS);
         }
 
+        // 📦 Zapisz aktualny stan filmów
+        movieListCaretaker.save(new MovieListMemento(movieRepository.findAll()));
+
         // before using video factory
         // Movie movie = new Movie();
         // movie.setTitle(movieToSave.getTitle());
@@ -137,6 +145,56 @@ public class MovieService {
         }
         return movieRepository.save(movie);
     }
+
+    /*  //before adding memento that restores movie list to state before change
+    public Movie addMovie(MovieSaveDto movieToSave) {
+        if (movieRepository.findByTitle(movieToSave.getTitle()).isPresent()) {
+            throw new BadRequestException(Messages.MOVIE_TITLE_EXISTS);
+        }
+
+        // before using video factory
+        // Movie movie = new Movie();
+        // movie.setTitle(movieToSave.getTitle());
+        // movie.setOriginalTitle(movieToSave.getOriginalTitle());
+        // movie.setPromoted(movieToSave.isPromoted());
+        // movie.setReleaseYear(movieToSave.getReleaseYear());
+        // movie.setShortDescription(movieToSave.getShortDescription());
+        // movie.setDescription(movieToSave.getDescription());
+        // movie.setYoutubeTrailerId(movieToSave.getYoutubeTrailerId());
+        //
+
+        // using video factory
+
+        Movie movie = VideoFactory.createMovie(
+                movieToSave.getTitle(),
+                movieToSave.getOriginalTitle(),
+                movieToSave.getShortDescription(),
+                movieToSave.getDescription(),
+                movieToSave.getYoutubeTrailerId(),
+                movieToSave.getReleaseYear(),
+                movieToSave.isPromoted(),
+                "no_poster"
+                );
+
+        Genre genre = genreRepository.findByNameIgnoreCase(movieToSave.getGenre())
+                .orElseThrow(() -> new ResourceNotFoundException(Messages.GENRE_NOT_FOUND));
+        movie.setGenre(genre);
+
+        // Wykorzstanie Thread-safe Singleton z leniwą inicjalizacją (double-checked
+        // locking). /////////////////////////
+        if (movieToSave.getPoster() != null) {
+            try {
+                FileStorageService storageService = FileStorageService.getInstance();
+                String savedFileName = storageService.saveImage(movieToSave.getPoster());
+                movie.setPoster(savedFileName);
+            }
+            catch(FileNotFoundException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+        return movieRepository.save(movie);
+    }
+    * */
 
     public List<MovieDto> findTopMovies(int size) {
         Pageable page = Pageable.ofSize(size);
@@ -191,4 +249,18 @@ public class MovieService {
         
         return expression.interpret(context);
     }
+
+
+    // New method for restoring the movie list using memento pattern
+    public void undoLastMovieAdd() {
+        MovieListMemento memento = movieListCaretaker.getLastSnapshot();
+        if (memento != null) {
+            movieRepository.deleteAll();
+            movieRepository.saveAll(memento.getSavedState());
+        } else {
+            throw new IllegalStateException("Brak zapisanej poprzedniej wersji listy filmów.");
+        }
+    }
+
+
 }
