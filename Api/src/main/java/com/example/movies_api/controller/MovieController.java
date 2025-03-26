@@ -2,6 +2,7 @@ package com.example.movies_api.controller;
 
 import com.example.movies_api.dto.MovieDto;
 import com.example.movies_api.exception.BadRequestException;
+import com.example.movies_api.facade.movie_facade.MovieFacade;
 import com.example.movies_api.movie_data_provider.ExternalMovieProvider;
 import com.example.movies_api.movie_data_provider.LocalMovieProvider;
 import com.example.movies_api.service.MovieService;
@@ -22,6 +23,7 @@ public class MovieController {
     private final MovieService movieService;
     private final LocalMovieProvider localMovieProvider;
     private final ExternalMovieProvider externalMovieProvider;
+    private final MovieFacade movieFacade;
 
     //@Cacheable("movies")
     @GetMapping("/all")
@@ -64,6 +66,12 @@ public class MovieController {
     @GetMapping("/error-test")
     public void throwError() {
         throw new EntityNotFoundException("Film nie zostal znaleziony");
+    }
+
+    // Fasada – pobierz wszystkie filmy z logiką fallbacku
+    @GetMapping("/facade/all-movie")
+    public ResponseEntity<List<MovieDto>> getAllMoviesViaFacade() {
+        return ResponseEntity.ok(movieFacade.getAllMovies());
     }
 
 }

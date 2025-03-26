@@ -1,14 +1,11 @@
 package com.example.movies_api.controller;
 
 import com.example.movies_api.controller.trailer_adapter.JsonTrailerAdapter;
-import com.example.movies_api.controller.trailer_adapter.TrailerAdapter;
 import com.example.movies_api.controller.trailer_adapter.XmlTrailerAdapter;
 import com.example.movies_api.dto.TrailerDto;
 import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.facade.trailer_facade.TrailerFacade;
 import com.example.movies_api.service.TrailerService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
