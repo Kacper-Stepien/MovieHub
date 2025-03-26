@@ -12,6 +12,6 @@ public class LogTrailerCreateCommand implements LogCommand {
 
     @Override
     public void execute() {
-        CommandLogger.log("Dodano trailer: " + trailer.getTitle());
+        CommandLogger.log("trailers.log","Dodano trailer: " + trailer.getTitle());
     }
 }

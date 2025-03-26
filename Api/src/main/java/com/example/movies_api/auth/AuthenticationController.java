@@ -2,6 +2,9 @@ package com.example.movies_api.auth;
 
 import com.example.movies_api.auth.adapter.JsonAuthenticationAdapter;
 import com.example.movies_api.auth.adapter.XmlAuthenticationAdapter;
+import com.example.movies_api.command.LogCommand;
+import com.example.movies_api.command.user.LogUserLoginCommand;
+import com.example.movies_api.command.user.LogUserRegisterCommand;
 import com.example.movies_api.service.ValidationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +36,10 @@ public class AuthenticationController {
         if (errors != null) {
             return errors;
         }
+
+        LogCommand logCommand = new LogUserRegisterCommand(registerRequest);
+        logCommand.execute();
+
         return ResponseEntity.ok(authenticationService.register(registerRequest));
     }
 
@@ -45,6 +52,9 @@ public class AuthenticationController {
         if (errors != null) {
             return errors;
         }
+
+        LogCommand logCommand = new LogUserLoginCommand(request);
+        logCommand.execute();
         return ResponseEntity.ok(jsonAdapter.authenticate(request));
     }
 
@@ -53,6 +63,9 @@ public class AuthenticationController {
     public ResponseEntity<?> authenticateXml(
             @RequestBody String xmlRequest
     ) {
+
+        LogCommand logCommand = new LogUserLoginCommand(xmlRequest);
+        logCommand.execute();
         return ResponseEntity.ok(xmlAdapter.authenticateXml(xmlRequest));
     }
 }

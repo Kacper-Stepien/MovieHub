@@ -13,6 +13,6 @@ public class LogTrailerUpdateCommand implements LogCommand {
 
     @Override
     public void execute() {
-        CommandLogger.log("Zaktualizowano trailer: " + trailer.getTitle());
+        CommandLogger.log("trailers.log","Zaktualizowano trailer: " + trailer.getTitle());
     }
 }

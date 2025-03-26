@@ -12,6 +12,6 @@ public class LogTrailerDeleteCommand implements LogCommand {
 
     @Override
     public void execute() {
-        CommandLogger.log("Usunięto trailer o ID: " + trailerId);
+        CommandLogger.log("trailers.log","Usunięto trailer o ID: " + trailerId);
     }
 }

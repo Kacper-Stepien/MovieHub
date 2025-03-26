@@ -1,5 +1,8 @@
 package com.example.movies_api.controller;
 
+import com.example.movies_api.command.LogCommand;
+import com.example.movies_api.command.user.LogUserDetailsUpdateCommand;
+import com.example.movies_api.command.user.LogUserPasswordChangeCommand;
 import com.example.movies_api.dto.UpdatePasswordDto;
 import com.example.movies_api.dto.UpdateUserDetailsDto;
 import com.example.movies_api.dto.UserDto;
@@ -23,6 +26,10 @@ public class UserController {
     public ResponseEntity<Void> updateUserDetails(@Valid @RequestBody UpdateUserDetailsDto dto) {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         userServiceProxy.updateUserDetails(currentUserEmail, dto);
+
+        LogCommand logCommand = new LogUserDetailsUpdateCommand(currentUserEmail);
+        logCommand.execute();
+
         return ResponseEntity.noContent().build();
     }
 
@@ -30,6 +37,10 @@ public class UserController {
     public ResponseEntity<Void> updateUserPassword(@Valid @RequestBody UpdatePasswordDto dto) {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         userServiceProxy.updateUserPassword(currentUserEmail, dto);
+
+        LogCommand logCommand = new LogUserPasswordChangeCommand(currentUserEmail);
+        logCommand.execute();
+
         return ResponseEntity.noContent().build();
     }
 

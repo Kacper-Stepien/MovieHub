@@ -8,14 +8,13 @@ import java.time.LocalDateTime;
 
 public class CommandLogger {
     private static final String LOG_DIRECTORY = "api_logs";
-    private static final String LOG_FILE = LOG_DIRECTORY + "/trailers.log";
 
-    public static void log(String message) {
+    public static void log(String logFileName, String message) {
         try {
-            // Upewnij się, że katalog istnieje
             Files.createDirectories(Paths.get(LOG_DIRECTORY));
+            String logPath = LOG_DIRECTORY + "/" + logFileName;
 
-            try (FileWriter writer = new FileWriter(LOG_FILE, true)) {
+            try (FileWriter writer = new FileWriter(logPath, true)) {
                 writer.write(LocalDateTime.now() + " - " + message + "\n");
             }
 
