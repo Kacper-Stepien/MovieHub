@@ -86,4 +86,13 @@ public class MovieSortingServiceTest {
         assertTrue(strategies.contains("title"));
         assertTrue(strategies.contains("year"));
     }
+
+    @Test
+    public void testSortWithEmptyList() {
+        List<MovieDto> emptyList = new ArrayList<>();
+        List<MovieDto> sorted = sortingService.sortMovies(emptyList, "title");
+
+        assertTrue(sorted.isEmpty(), "Sorted list should be empty when input list is empty");
+    }
+
 }
