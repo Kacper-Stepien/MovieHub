@@ -8,6 +8,9 @@ import com.example.movies_api.model.User;
 import com.example.movies_api.model.UserRole;
 import com.example.movies_api.repository.RoleRepository;
 import com.example.movies_api.repository.UserRepository;
+import com.example.movies_api.state.session.AdminUserState;
+import com.example.movies_api.state.session.GuestUserState;
+import com.example.movies_api.state.session.LoggedInUserState;
 import com.example.movies_api.events.EventType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -60,6 +64,7 @@ public AuthenticationResponse authenticate(AuthenticationRequest authenticationR
         var user = userRepository.findByEmail(authenticationRequest.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("Użytkownik nie istnieje"));
         var jwtToken = jwtService.generateToken(user);
+        assignSessionState(user);
 
         return AuthenticationResponse.builder()
                 .token(jwtToken)
@@ -73,5 +78,20 @@ public AuthenticationResponse authenticate(AuthenticationRequest authenticationR
         throw new BadRequestException("Nieprawidłowy email lub hasło");
     }
 }
+
+public void assignSessionState(User user) {
+    Set<String> roleNames = user.getRoles().stream()
+        .map(UserRole::getName)
+        .collect(Collectors.toSet());
+
+    if (roleNames.contains("ADMIN")) {
+        user.setSessionState(new AdminUserState());
+    } else if (roleNames.contains("USER")) {
+        user.setSessionState(new LoggedInUserState());
+    } else {
+        user.setSessionState(new GuestUserState());
+    }
+}
+
 }
 

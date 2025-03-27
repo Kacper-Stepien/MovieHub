@@ -1,6 +1,8 @@
 package com.example.movies_api.model;
 
 import com.example.movies_api.memento.user_memento.UserMemento;
+import com.example.movies_api.state.session.UserSessionState;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -80,6 +82,32 @@ public class User implements UserDetails {
         return true;
     }
 
+    @Transient
+    private UserSessionState sessionState;
+
+    public void setSessionState(UserSessionState sessionState) {
+        this.sessionState = sessionState;
+    }
+
+    public UserSessionState getSessionState() {
+        return this.sessionState;
+    }
+
+    public boolean canBrowseMovies() {
+        return sessionState != null && sessionState.canBrowseMovies();
+    }
+
+    public boolean canRateMovies() {
+        return sessionState != null && sessionState.canRateMovies();
+    }
+
+    public boolean canDeleteMovies() {
+        return sessionState != null && sessionState.canDeleteMovies();
+    }
+
+    public String getRoleDescription() {
+        return sessionState != null ? sessionState.getRoleDescription() : "Nieznany stan sesji";
+    }
 
     //wzorzec pamiątka do zapisywania stanu obiektu użytkownika na wypadek gdyby chciał cofnąć wprowadzone zmiany:
     public UserMemento saveToMemento() {
