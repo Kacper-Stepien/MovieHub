@@ -73,6 +73,20 @@ public class TrailerController {
         }
     }
 
+    /**
+     * Search trailers using the Strategy pattern
+     */
+    @GetMapping("/search-with-strategy")
+    public ResponseEntity<List<TrailerDto>> searchTrailersWithStrategy(
+            @RequestParam String searchType,
+            @RequestParam String searchTerm,
+            @RequestParam(required = false, defaultValue = "local") String source) {
+        try {
+            return ResponseEntity.ok(trailerService.searchTrailersWithStrategy(searchType, searchTerm, source));
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid search parameters: " + e.getMessage());
+        }
+    }
 
     // Fasada – pobierz wszystkie trailery z logiką fallbacku
     @GetMapping("/facade/all-trailer")

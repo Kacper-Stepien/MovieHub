@@ -13,6 +13,9 @@ import com.example.movies_api.memento.trailer_memento.TrailerListMemento;
 import com.example.movies_api.model.Trailer;
 import com.example.movies_api.proxy.TrailerDataProxy;
 import com.example.movies_api.repository.TrailerRepository;
+import com.example.movies_api.strategy.trailer_search.DescriptionSearchStrategy;
+import com.example.movies_api.strategy.trailer_search.TitleSearchStrategy;
+import com.example.movies_api.strategy.trailer_search.TrailerSearchStrategy;
 import com.example.movies_api.trailer_data_provider.ExternalTrailerProvider;
 import com.example.movies_api.trailer_data_provider.LocalTrailerProvider;
 import com.example.movies_api.trailer_data_provider.TrailerProvider;
@@ -32,6 +35,8 @@ public class TrailerService {
     private final ExternalTrailerProvider externalTrailerProvider;
     private final TrailerDataProxy trailerDataProxy;
     private final TrailerListCaretaker trailerListCaretaker;
+    private final TitleSearchStrategy titleSearchStrategy;
+    private final DescriptionSearchStrategy descriptionSearchStrategy;
 
 
     public TrailerDto addTrailer(TrailerDto trailerDto) {
@@ -117,6 +122,27 @@ public class TrailerService {
         TrailerSearchExpression expression = parser.parse(searchQuery);
         
         return expression.interpret(context);
+    }
+
+    /**
+     * Search trailers using a Strategy pattern implementation
+     *
+     * @param searchType the type of search (title, description)
+     * @param searchTerm the term to search for
+     * @param source the source of trailers (local or external)
+     * @return list of trailers that match the criteria
+     */
+    public List<TrailerDto> searchTrailersWithStrategy(String searchType, String searchTerm, String source) {
+        List<TrailerDto> allTrailers = getTrailers(source);
+        
+        TrailerSearchStrategy strategy;
+        if ("description".equalsIgnoreCase(searchType)) {
+            strategy = descriptionSearchStrategy;
+        } else {
+            strategy = titleSearchStrategy; // Default to title search
+        }
+        
+        return strategy.search(allTrailers, searchTerm);
     }
 
 
