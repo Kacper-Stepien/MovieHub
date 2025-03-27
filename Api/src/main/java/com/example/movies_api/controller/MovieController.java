@@ -6,6 +6,7 @@ import com.example.movies_api.facade.movie_facade.MovieFacade;
 import com.example.movies_api.movie_data_provider.ExternalMovieProvider;
 import com.example.movies_api.movie_data_provider.LocalMovieProvider;
 import com.example.movies_api.service.MovieService;
+import com.example.movies_api.service.MovieSortingService;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class MovieController {
     private final LocalMovieProvider localMovieProvider;
     private final ExternalMovieProvider externalMovieProvider;
     private final MovieFacade movieFacade;
+    private final MovieSortingService sortingService;
 
     //@Cacheable("movies")
     @GetMapping("/all")
@@ -72,6 +74,33 @@ public class MovieController {
     @GetMapping("/facade/all-movie")
     public ResponseEntity<List<MovieDto>> getAllMoviesViaFacade() {
         return ResponseEntity.ok(movieFacade.getAllMovies());
+    }
+
+    /**
+     * Pobiera listę filmów z opcją sortowania
+     * 
+     * @param sortBy strategia sortowania (np. "title", "year")
+     * @return posortowana lista filmów
+     */
+    @GetMapping("/sorted")
+    public ResponseEntity<List<MovieDto>> getMoviesSorted(
+            @RequestParam(defaultValue = "title") String sortBy) {
+        
+        // Pobieramy wszystkie filmy
+        List<MovieDto> allMovies = movieService.findAllMovies();
+        
+        // Sortujemy filmy używając wybranej strategii
+        List<MovieDto> sortedMovies = sortingService.sortMovies(allMovies, sortBy);
+        
+        return ResponseEntity.ok(sortedMovies);
+    }
+    
+    /**
+     * Zwraca dostępne opcje sortowania
+     */
+    @GetMapping("/sorting-options")
+    public ResponseEntity<List<String>> getSortingOptions() {
+        return ResponseEntity.ok(sortingService.getAvailableSortingStrategies());
     }
 
 }
