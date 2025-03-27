@@ -4,8 +4,8 @@ import com.example.movies_api.crew.CrewGroup;
 import com.example.movies_api.factory.Video;
 import com.example.movies_api.flyweight.MovieType;
 import com.example.movies_api.flyweight.MovieTypeConverter;
-import com.example.movies_api.state.MovieState;
-import com.example.movies_api.state.UpcomingState;
+import com.example.movies_api.state.movie.MovieState;
+import com.example.movies_api.state.movie.UpcomingState;
 
 import jakarta.persistence.*;
 import lombok.*;

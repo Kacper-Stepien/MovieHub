@@ -1,4 +1,4 @@
-package com.example.movies_api.state;
+package com.example.movies_api.state.movie;
 
 public class UpcomingState implements MovieState {
     @Override
