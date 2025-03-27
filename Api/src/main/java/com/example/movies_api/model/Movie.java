@@ -4,6 +4,9 @@ import com.example.movies_api.crew.CrewGroup;
 import com.example.movies_api.factory.Video;
 import com.example.movies_api.flyweight.MovieType;
 import com.example.movies_api.flyweight.MovieTypeConverter;
+import com.example.movies_api.state.MovieState;
+import com.example.movies_api.state.UpcomingState;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -128,6 +131,29 @@ public class Movie implements Video {
         return poster;
     }
 
+    @Transient
+    private MovieState state = new UpcomingState(); // domyślnie
+
+    public void setState(MovieState state) {
+        this.state = state;
+    }
+
+    public MovieState getState() {
+        return this.state;
+    }
+
+    public boolean canBeBooked() {
+        return state.canBeBooked();
+    }
+
+    public boolean canBeRated() {
+        return state.canBeRated();
+    }
+
+    public String getAvailabilityMessage() {
+        return state.getAvailabilityMessage();
+}
+
     // Ręczna implementacja wzorca Builder
     public static MovieBuilder builder() {
         return new MovieBuilder();
@@ -209,25 +235,21 @@ public class Movie implements Video {
         }
 
         public Movie build() {
-            Movie movie = new Movie(
-                    null,
-                    title,
-                    originalTitle,
-                    shortDescription,
-                    description,
-                    youtubeTrailerId,
-                    releaseYear,
-                    null,     // Genre
-                    promoted,
-                    poster,
-                    new HashSet<>(),
-                    new HashSet<>(),
-                    null   ,   // crewRoot
-                    this.movieType   // movieType
-            );
-
+            Movie movie = new Movie();
+            movie.setId(id);
+            movie.setTitle(title);
+            movie.setOriginalTitle(originalTitle);
+            movie.setShortDescription(shortDescription);
+            movie.setDescription(description);
+            movie.setYoutubeTrailerId(youtubeTrailerId);
+            movie.setReleaseYear(releaseYear);
+            movie.setPromoted(promoted);
+            movie.setPoster(poster);
+            movie.setRatings(ratings);
+            movie.setComments(comments);
+            movie.setMovieType(movieType);
+            movie.setState(new UpcomingState());
             return movie;
-//            return new Movie(null, title, originalTitle, shortDescription, description, youtubeTrailerId, releaseYear, null, promoted, poster, new HashSet<>(), new HashSet<>(), null);
         }
     }
 }

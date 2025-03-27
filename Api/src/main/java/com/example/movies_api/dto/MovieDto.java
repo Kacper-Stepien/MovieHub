@@ -34,5 +34,6 @@ public class MovieDto {
     private double avgRating;
     private int ratingCount;
     private String movieType;
+    private String availabilityMessage;
 }
 

@@ -18,6 +18,9 @@ import com.example.movies_api.movie_data_provider.LocalMovieProvider;
 import com.example.movies_api.proxy.MovieDataProxy;
 import com.example.movies_api.repository.GenreRepository;
 import com.example.movies_api.repository.MovieRepository;
+import com.example.movies_api.state.ArchivedState;
+import com.example.movies_api.state.NowPlayingState;
+import com.example.movies_api.state.UpcomingState;
 import com.example.movies_api.stats.StatsCollector;
 import com.example.movies_api.storage.FileStorageService;
 import com.example.movies_api.interpreter.movie_query.Context;
@@ -127,6 +130,9 @@ public class MovieService {
                 "no_poster"
                 );
 
+        // Using State pattern to set the state of the movie
+        assignMovieState(movie, movieToSave.getReleaseYear());
+
         Genre genre = genreRepository.findByNameIgnoreCase(movieToSave.getGenre())
                 .orElseThrow(() -> new ResourceNotFoundException(Messages.GENRE_NOT_FOUND));
         movie.setGenre(genre);
@@ -144,6 +150,17 @@ public class MovieService {
             }
         }
         return movieRepository.save(movie);
+    }
+
+    private void assignMovieState(Movie movie, int releaseYear) {
+        int currentYear = java.time.Year.now().getValue();
+        if (releaseYear == currentYear) {
+            movie.setState(new NowPlayingState());
+        } else if (releaseYear < currentYear) {
+            movie.setState(new ArchivedState());
+        } else {
+            movie.setState(new UpcomingState());
+        }
     }
 
     /*  //before adding memento that restores movie list to state before change
@@ -212,6 +229,8 @@ public class MovieService {
         updateMovieDto.getShortDescription().ifPresent(movie::setShortDescription);
         updateMovieDto.getYoutubeTrailerId().ifPresent(movie::setYoutubeTrailerId);
         updateMovieDto.getReleaseYear().ifPresent(movie::setReleaseYear);
+
+        updateMovieDto.getReleaseYear().ifPresent(year -> assignMovieState(movie, year));
 
         movieRepository.save(movie);
     }

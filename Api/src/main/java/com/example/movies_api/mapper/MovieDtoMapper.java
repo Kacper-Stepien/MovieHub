@@ -51,6 +51,12 @@ public class MovieDtoMapper {
             movieDto.setRatingCount(0);
         }
 
+        if (movie.getState() != null) {
+            movieDto.setAvailabilityMessage(movie.getAvailabilityMessage());
+        } else {
+            movieDto.setAvailabilityMessage("Brak informacji o stanie filmu.");
+        }
+
         return movieDto;
     }
 
