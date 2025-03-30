@@ -9,6 +9,8 @@ import com.example.movies_api.mapper.GenreDtoMapper;
 import com.example.movies_api.model.Genre;
 import com.example.movies_api.model.Movie;
 import com.example.movies_api.repository.GenreRepository;
+import com.example.movies_api.repository.MovieRepository;
+import com.example.movies_api.visitor.MovieCountGenreVisitor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ import static com.example.movies_api.constants.Messages.GENRE_NOT_FOUND;
 public class GenreService {
     private final GenreRepository genreRepository;
     private final GenreDtoMapper genreDtoMapper;
+    private final MovieRepository movieRepository;
 
     public GenreDto findGenreByName(String name) {
         return genreRepository.findByNameIgnoreCase(name)
@@ -159,5 +162,14 @@ public class GenreService {
         dto.setChildren(childDtos);
 
         return dto;
+    }
+
+    // Visitor 3 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    public String generateMovieCountReport(Long rootGenreId) {
+        Genre root = genreRepository.findById(rootGenreId)
+                .orElseThrow(() -> new RuntimeException("Gatunek nie znaleziony: " + rootGenreId));
+        MovieCountGenreVisitor visitor = new MovieCountGenreVisitor(movieRepository);
+        root.accept(visitor);
+        return visitor.getReport();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.movies_api.model;
 
+import com.example.movies_api.visitor.GenreVisitor;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -59,6 +60,19 @@ public class Genre implements Iterable<Genre> {
         }
         return total;
     }
+
+    // Visitor 3 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void accept(GenreVisitor visitor) {
+        accept(visitor, 0);
+    }
+
+    private void accept(GenreVisitor visitor, int depth) {
+        visitor.visit(this, depth);
+        for (Genre child : children) {
+            child.accept(visitor, depth + 1);
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Iterator 1 //////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override

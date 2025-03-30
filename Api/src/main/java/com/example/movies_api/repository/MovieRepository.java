@@ -1,5 +1,6 @@
 package com.example.movies_api.repository;
 
+import com.example.movies_api.model.Genre;
 import com.example.movies_api.model.Movie;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Movie> findTopByRating(Pageable page);
 
     Optional<Movie> findByTitle(String title);
+
+    long countByGenre_Id(Long genreId);
 }
