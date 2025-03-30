@@ -3,6 +3,7 @@ package com.example.movies_api.crew;
 import com.example.movies_api.flyweight.RoleName;
 import com.example.movies_api.model.Movie;
 import com.example.movies_api.repository.MovieRepository;
+import com.example.movies_api.visitor.CrewReportVisitor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -91,4 +92,17 @@ public class CrewService {
         }
         return flattened;
     }
+
+    // Visitor 1 użycie ////////////////////////////////////////////////////////////////////////////////////////////////
+    public List<String> generateCrewReport(Long rootGroupId) {
+        CrewItem root = crewItemRepository.findById(rootGroupId)
+                .orElseThrow(() -> new RuntimeException("Brak grupy o id " + rootGroupId));
+        if (!(root instanceof CrewGroup)) {
+            throw new RuntimeException("Podany item nie jest grupą");
+        }
+        CrewReportVisitor visitor = new CrewReportVisitor();
+        ((CrewGroup) root).accept(visitor);
+        return visitor.getReport();
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

@@ -1,5 +1,6 @@
 package com.example.movies_api.crew;
 import com.example.movies_api.model.Movie;
+import com.example.movies_api.visitor.CrewVisitor;
 import jakarta.persistence.*;
 
 import java.util.*;
@@ -45,6 +46,16 @@ public class CrewGroup extends CrewItem implements Iterable<CrewItem> {
     public List<CrewItem> getChildren() {
         return children;
     }
+
+    // Visitor 1 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void accept(CrewVisitor visitor) {
+        visitor.visit(this);
+        for (CrewItem child : children) {
+            child.accept(visitor);
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Iterator 2 ///////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override

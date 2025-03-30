@@ -1,5 +1,6 @@
 package com.example.movies_api.crew;
 import com.example.movies_api.model.Movie;
+import com.example.movies_api.visitor.CrewVisitor;
 import jakarta.persistence.*;
 
 // Kompozyt 2 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,4 +54,7 @@ public abstract class CrewItem {
     public abstract void removeItem(CrewItem item);
     public abstract String show(String indent);
     public abstract int countMembers();
+
+    // Visitor 1 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    public abstract void accept(CrewVisitor visitor);
 }

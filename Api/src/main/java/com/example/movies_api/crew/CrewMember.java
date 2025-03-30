@@ -3,6 +3,7 @@ package com.example.movies_api.crew;
 import com.example.movies_api.flyweight.RoleName;
 import com.example.movies_api.flyweight.RoleNameConverter;
 import com.example.movies_api.model.Movie;
+import com.example.movies_api.visitor.CrewVisitor;
 import jakarta.persistence.Convert;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -45,5 +46,11 @@ public class CrewMember extends CrewItem {
 
     public RoleName getRole() {
         return role;
+    }
+
+    // Visitor 1 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void accept(CrewVisitor visitor) {
+        visitor.visit(this);
     }
 }
