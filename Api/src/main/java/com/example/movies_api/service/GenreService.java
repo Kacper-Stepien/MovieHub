@@ -7,10 +7,10 @@ import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.exception.ResourceNotFoundException;
 import com.example.movies_api.mapper.GenreDtoMapper;
 import com.example.movies_api.model.Genre;
-import com.example.movies_api.model.Movie;
 import com.example.movies_api.repository.GenreRepository;
 import com.example.movies_api.repository.MovieRepository;
 import com.example.movies_api.visitor.MovieCountGenreVisitor;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +26,7 @@ public class GenreService {
     private final GenreRepository genreRepository;
     private final GenreDtoMapper genreDtoMapper;
     private final MovieRepository movieRepository;
+    private final GenreVisitorService genreVisitorService;
 
     public GenreDto findGenreByName(String name) {
         return genreRepository.findByNameIgnoreCase(name)
@@ -164,12 +165,17 @@ public class GenreService {
         return dto;
     }
 
-    // Visitor 3 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Moved visitor-related functionality to GenreVisitorService
     public String generateMovieCountReport(Long rootGenreId) {
-        Genre root = genreRepository.findById(rootGenreId)
-                .orElseThrow(() -> new RuntimeException("Gatunek nie znaleziony: " + rootGenreId));
-        MovieCountGenreVisitor visitor = new MovieCountGenreVisitor(movieRepository);
-        root.accept(visitor);
-        return visitor.getReport();
+        return genreVisitorService.generateMovieCountReport(rootGenreId);
     }
+
+    // Visitor 3 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    // public String generateMovieCountReport(Long rootGenreId) {
+    //     Genre root = genreRepository.findById(rootGenreId)
+    //             .orElseThrow(() -> new RuntimeException("Gatunek nie znaleziony: " + rootGenreId));
+    //     MovieCountGenreVisitor visitor = new MovieCountGenreVisitor(movieRepository);
+    //     root.accept(visitor);
+    //     return visitor.getReport();
+    // }
 }

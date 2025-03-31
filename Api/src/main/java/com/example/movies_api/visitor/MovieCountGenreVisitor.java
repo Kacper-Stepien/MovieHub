@@ -27,12 +27,13 @@ public class MovieCountGenreVisitor implements GenreVisitor {
         return movieCounts;
     }
 
-    public String getReport() {
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<Genre, Long> entry : movieCounts.entrySet()) {
-            sb.append("Genre: ").append(entry.getKey().getName())
-                    .append(" -> ").append(entry.getValue()).append(" movies\n");
-        }
-        return sb.toString();
-    }
+    // extract the reporting functionality to GenreReportFormatter class
+    // public String getReport() {
+    //     StringBuilder sb = new StringBuilder();
+    //     for (Map.Entry<Genre, Long> entry : movieCounts.entrySet()) {
+    //         sb.append("Genre: ").append(entry.getKey().getName())
+    //                 .append(" -> ").append(entry.getValue()).append(" movies\n");
+    //     }
+    //     return sb.toString();
+    // }
 }

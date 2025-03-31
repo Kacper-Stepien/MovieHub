@@ -91,30 +91,36 @@ public class StatsCollector {
         return failedCallStats.values().stream().mapToInt(Integer::intValue).sum();
     }
     
-    // Wyświetla statystyki w czytelnym formacie
+    // Responsibility of report generation moved to StatsReportGenerator
     public String getStatsReport() {
-        StringBuilder report = new StringBuilder();
-        report.append("=== Stats Collector Report ===\n");
-        report.append("Total calls: ").append(callCount).append("\n");
-        report.append("Successful calls: ").append(getTotalSuccessCalls()).append("\n");
-        report.append("Failed calls: ").append(getTotalFailedCalls()).append("\n");
-        report.append("Last call time: ").append(lastCallTime).append("\n\n");
-        
-        report.append("=== Endpoint Stats ===\n");
-        methodCallStats.forEach((endpoint, count) -> {
-            int success = successCallStats.getOrDefault(endpoint, 0);
-            int failed = failedCallStats.getOrDefault(endpoint, 0);
-            LocalDateTime lastCall = lastMethodCallTime.get(endpoint);
-            
-            report.append(endpoint).append(":\n");
-            report.append("  Calls: ").append(count).append("\n");
-            report.append("  Success: ").append(success).append("\n");
-            report.append("  Failed: ").append(failed).append("\n");
-            report.append("  Last call: ").append(lastCall).append("\n\n");
-        });
-        
-        return report.toString();
+        return StatsReportGenerator.generateReport(this);
     }
+    
+    // Wyświetla statystyki w czytelnym formacie
+    // public String getStatsReport() {
+    //     StringBuilder report = new StringBuilder();
+    //     report.append("=== Stats Collector Report ===\n");
+    //     report.append("Total calls: ").append(callCount).append("\n");
+    //     report.append("Successful calls: ").append(getTotalSuccessCalls()).append("\n");
+    //     report.append("Failed calls: ").append(getTotalFailedCalls()).append("\n");
+    //     report.append("Last call time: ").append(lastCallTime).append("\n\n");
+        
+    //     report.append("=== Endpoint Stats ===\n");
+    //     methodCallStats.forEach((endpoint, count) -> {
+    //         int success = successCallStats.getOrDefault(endpoint, 0);
+    //         int failed = failedCallStats.getOrDefault(endpoint, 0);
+    //         LocalDateTime lastCall = lastMethodCallTime.get(endpoint);
+            
+    //         report.append(endpoint).append(":\n");
+    //         report.append("  Calls: ").append(count).append("\n");
+    //         report.append("  Success: ").append(success).append("\n");
+    //         report.append("  Failed: ").append(failed).append("\n");
+    //         report.append("  Last call: ").append(lastCall).append("\n\n");
+    //     });
+        
+    //     return report.toString();
+    // }
+
 }
 
 // Mediator 1
