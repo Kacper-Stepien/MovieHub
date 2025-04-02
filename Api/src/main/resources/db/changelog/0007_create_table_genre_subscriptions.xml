@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+
+    <changeSet id="0007-1" author="Kacper">
+        <createTable tableName="genre_subscriptions">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="genre_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="genre_subscriptions" columnNames="user_id, genre_id" constraintName="pk_genre_subscriptions"/>
+
+        <addForeignKeyConstraint
+                baseTableName="genre_subscriptions"
+                baseColumnNames="user_id"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                constraintName="fk_genre_subscriptions_user_id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="genre_subscriptions"
+                baseColumnNames="genre_id"
+                referencedTableName="genre"
+                referencedColumnNames="id"
+                constraintName="fk_genre_subscriptions_genre_id"/>
+    </changeSet>
+</databaseChangeLog>

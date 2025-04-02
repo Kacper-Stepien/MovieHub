@@ -7,3 +7,5 @@ INSERT INTO movie_subscriptions (user_id, movie_id) VALUES
                                                         (2, 1),
                                                         (3, 2),
                                                         (2, 2);
+
+

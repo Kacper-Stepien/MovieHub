@@ -11,6 +11,7 @@
         <include file="0004_create_table_movie_rating.xml" relativeToChangelogFile="true"/>
         <include file="0005_create_table_movie_comment.xml" relativeToChangelogFile="true"/>
         <include file="0006_create_table_movie_subscriptions.xml" relativeToChangelogFile="true"/>
+        <include file="0007_create_table_genre_subscriptions.xml" relativeToChangelogFile="true"/>
 
         <include file="../testdata/0001_genres.sql" relativeToChangelogFile="true" context="dev"/>
         <include file="../testdata/0002_movies.sql" relativeToChangelogFile="true" context="dev"/>
@@ -18,5 +19,6 @@
         <include file="../testdata/0004_movie_ratings.sql" relativeToChangelogFile="true" context="dev"/>
         <include file="../testdata/0005_movie_comments.sql" relativeToChangelogFile="true" context="dev"/>
         <include file="../testdata/0006_movie_subscriptions.sql" relativeToChangelogFile="true" context="dev"/>
+        <include file="../testdata/0007_genre_subscriptions.sql" relativeToChangelogFile="true" context="dev"/>
 
 </databaseChangeLog>

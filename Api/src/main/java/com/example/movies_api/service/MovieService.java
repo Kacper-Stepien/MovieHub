@@ -31,6 +31,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import com.example.movies_api.observer.recomendation.*;
 
 import java.io.FileNotFoundException;
 import java.io.UncheckedIOException;
@@ -41,7 +42,7 @@ import static com.example.movies_api.constants.Messages.MOVIE_NOT_FOUND;
 
 //bridge for movie provider
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor //observer 3/3 [commented line]
 public class MovieService {
     private final MovieRepository movieRepository;
     private final GenreRepository genreRepository;
@@ -53,6 +54,22 @@ public class MovieService {
 
     private final MovieListCaretaker movieListCaretaker;
 
+    // observer 3/3 [added line]
+    private final MovieObservable movieObservable = new MovieObservable();
+    //private final MovieObservable movieObservable;
+
+
+    //observer 3/3 [added observer over movie repository]
+    public MovieService(MovieRepository movieRepository, GenreRepository genreRepository, MovieDtoMapper mapper, LocalMovieProvider localMovieProvider, ExternalMovieProvider externalMovieProvider, MovieDataProxy movieDataProxy, MovieListCaretaker movieListCaretaker) {
+        this.movieRepository = movieRepository;
+        this.genreRepository = genreRepository;
+        this.mapper = mapper;
+        this.localMovieProvider = localMovieProvider;
+        this.externalMovieProvider = externalMovieProvider;
+        this.movieDataProxy = movieDataProxy;
+        this.movieListCaretaker = movieListCaretaker;
+        this.movieObservable.addObserver(new GenreBasedRecommendationObserver(movieRepository));
+    }
 
     // before using the proxy
     // public List<MovieDto> getMovies(String source) {
@@ -149,6 +166,11 @@ public class MovieService {
                 throw new UncheckedIOException(e);
             }
         }
+
+        //observer 3/3 [line added]
+        movieObservable.notifyObservers(movie);
+
+
         return movieRepository.save(movie);
     }
 
