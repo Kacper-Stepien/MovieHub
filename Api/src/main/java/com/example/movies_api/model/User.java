@@ -45,6 +45,17 @@ public class User implements UserDetails {
 
     private Set<UserRole> roles = new HashSet<>();
 
+
+    //observer pattern 1/3 2/3 [added code]
+    @ManyToMany
+    @JoinTable(
+            name = "movie_subscriptions",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id")
+    )
+    private Set<Movie> subscribedMovies = new HashSet<>();
+    /// ///////////////////
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()

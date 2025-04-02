@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+//3/3 memento pattern - for rolling back user detail from before modification
+//[previously] that file did not exist
 @Component
 public class UserCaretaker {
 

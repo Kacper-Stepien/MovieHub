@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
+//3/3 command pattern - added command receiver and command invoker
+//[previously] that file did not exist
 public class CommandLogger {
     private final FileLogWriter logWriter = new FileLogWriter();
 

@@ -5,6 +5,9 @@ import com.example.movies_api.command.LogCommand;
 import com.example.movies_api.logger.CommandLogger;
 import com.example.movies_api.logger.FileLogWriter;
 
+
+//2/3 command pattern - the command is issued on the user passowword change
+//[previously] that file did not exist
 public class LogUserPasswordChangeCommand implements LogCommand {
     private final String userEmail;
 

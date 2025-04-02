@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+
+    <changeSet id="0006-1" author="Robert">
+        <createTable tableName="movie_subscriptions">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="movie_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="user_id, movie_id"
+                       constraintName="pk_movie_subscriptions"
+                       tableName="movie_subscriptions"/>
+
+        <addForeignKeyConstraint
+                baseTableName="movie_subscriptions"
+                baseColumnNames="user_id"
+                constraintName="fk_movie_subscriptions_user_id"
+                referencedTableName="users"
+                referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="movie_subscriptions"
+                baseColumnNames="movie_id"
+                constraintName="fk_movie_subscriptions_movie_id"
+                referencedTableName="movie"
+                referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

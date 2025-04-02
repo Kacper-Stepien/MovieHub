@@ -11,6 +11,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
+//2/3 trailer facade that hides fetching the data from different sources - if the data is not found in the local database it is fetched from external source
+//[previously] - that file did not exist and was implemented from scratch
 public class TrailerFacadeImpl implements TrailerFacade {
 
     private final LocalTrailerProvider localProvider;

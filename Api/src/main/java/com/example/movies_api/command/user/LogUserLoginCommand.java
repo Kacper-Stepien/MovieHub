@@ -6,6 +6,9 @@ import com.example.movies_api.logger.CommandLogger;
 import com.example.movies_api.auth.AuthenticationRequest;
 import com.example.movies_api.logger.FileLogWriter;
 
+
+//2/3 command pattern - the command is issued on the user authenticate either via JSON or XML
+//[previously] that file did not exist
 public class LogUserLoginCommand implements LogCommand {
     private final String email;
 

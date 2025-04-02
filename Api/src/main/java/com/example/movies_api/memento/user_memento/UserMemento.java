@@ -1,6 +1,9 @@
 package com.example.movies_api.memento.user_memento;
 
 
+//3/3 memento pattern - for rolling back user detail from before modification
+//[previously] that file did not exist
+
 //wzorzec pamiątka do zapisywania stanu obiektu użytkownika na wypadek gdyby chciał cofnąć wprowadzone zmiany:
 public class UserMemento {
     private final String firstName;

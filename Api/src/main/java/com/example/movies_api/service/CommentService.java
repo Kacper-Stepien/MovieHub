@@ -8,6 +8,10 @@ import com.example.movies_api.mapper.CommentDtoMapper;
 import com.example.movies_api.model.Comment;
 import com.example.movies_api.model.Movie;
 import com.example.movies_api.model.User;
+import com.example.movies_api.observer.notification.EmailNotificationObserver;
+import com.example.movies_api.observer.notification.InAppNotificationObserver;
+import com.example.movies_api.observer.notification.MovieCommentNotifier;
+import com.example.movies_api.observer.notification.SmsNotificationObserver;
 import com.example.movies_api.repository.CommentRepository;
 import com.example.movies_api.repository.MovieRepository;
 import com.example.movies_api.repository.UserRepository;
@@ -41,6 +45,17 @@ public class CommentService {
         // Mediator 1 //////////////////////////////////////////////////////////////////////////////////////////////////
         MediatorConfig.MEDIATOR.notify(this, EventType.COMMENT_ADDED);
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /////////////observer pattern 1/2 2/2 //////////////////////<ADDED lines>
+        List<User> subscribers = userRepository.findAllSubscribedToMovie(movie.getId()); // You’d need to add this method
+        MovieCommentNotifier notifier = new MovieCommentNotifier();
+        notifier.registerObserver(new EmailNotificationObserver());
+        notifier.registerObserver(new SmsNotificationObserver());
+        notifier.registerObserver(new InAppNotificationObserver());
+
+        notifier.notifyAll(movie, commentToSaveOrUpdate, subscribers);
+        /// /////////////////////////////////////////
+
         return CommentDtoMapper.map(commentToSaveOrUpdate);
     }
 
