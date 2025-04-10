@@ -2,6 +2,8 @@ package com.example.movies_api.controller;
 
 
 import com.example.movies_api.controller.movie_management_adapter.JsonMovieManagementAdapter;
+import com.example.movies_api.controller.movie_management_adapter.MovieManagementAdapter;
+import com.example.movies_api.controller.movie_management_adapter.MovieManagementAdapterRegistry;
 import com.example.movies_api.controller.movie_management_adapter.XmlMovieManagementAdapter;
 import com.example.movies_api.dto.MovieCreationRequest;
 import com.example.movies_api.dto.MovieGenresDto;
@@ -31,6 +33,8 @@ import java.util.NoSuchElementException;
 @RequestMapping("/admin")
 public class MovieManagementController {
 
+    //Open-Close Principle 1/3 (data steering) [added line]
+    private final MovieManagementAdapterRegistry registry;
 
     private final JsonMovieManagementAdapter jsonAdapter;
     private final XmlMovieManagementAdapter xmlAdapter;
@@ -41,13 +45,61 @@ public class MovieManagementController {
     public MovieManagementController(JsonMovieManagementAdapter jsonAdapter,
                                      XmlMovieManagementAdapter xmlAdapter,
                                      MovieFacade movieFacade,
-                                     MovieService movieService) {
+                                     MovieService movieService,
+                                     MovieManagementAdapterRegistry registry) {
         this.jsonAdapter = jsonAdapter;
         this.xmlAdapter = xmlAdapter;
         this.movieFacade=movieFacade;
         this.movieService=movieService;
+        this.registry = registry;
     }
 
+    //Open-Close Principle 1/3 (data steering) [modified three endpoints]
+    @PatchMapping(value = "/update-movie/{id}", consumes = { "application/json", "application/xml" })
+    public ResponseEntity<String> updateMovie(
+            @PathVariable Long id,
+            @RequestBody UpdateMovieDto updateDto,
+            @RequestHeader("Content-Type") String contentType) {
+
+        MovieManagementAdapter adapter = registry.getAdapter(contentType);
+        if (adapter == null) {
+            return ResponseEntity.badRequest().body("Unsupported Content-Type: " + contentType);
+        }
+
+        String result = adapter.updateMovie(id, updateDto);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping(value = "/add-movie", consumes = { "multipart/form-data" })
+    public ResponseEntity<String> addMovie(
+            @RequestPart MovieSaveDto movieDto,
+            @RequestPart MultipartFile poster,
+            @RequestHeader("Content-Type") String contentType) {
+
+        MovieManagementAdapter adapter = registry.getAdapter("application/json"); // fallback lub dynamiczne parsowanie
+        if (adapter == null) {
+            return ResponseEntity.badRequest().body("Unsupported Content-Type");
+        }
+
+        String result = adapter.addMovie(movieDto, poster);
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("/delete-movie/{id}")
+    public ResponseEntity<String> deleteMovie(
+            @PathVariable Long id,
+            @RequestHeader("Content-Type") String contentType) {
+
+        MovieManagementAdapter adapter = registry.getAdapter(contentType);
+        if (adapter == null) {
+            return ResponseEntity.badRequest().body("Unsupported Content-Type: " + contentType);
+        }
+
+        String result = adapter.deleteMovie(id);
+        return ResponseEntity.ok(result);
+    }
+
+    /*
     @PostMapping(value = "/add-movie", consumes = {"multipart/form-data"}, produces = "application/json")
     public ResponseEntity<String> addMovie(
             @ModelAttribute MovieSaveDto movieDto,
@@ -76,11 +128,13 @@ public class MovieManagementController {
         return ResponseEntity.ok(response);
     }
 
+
     @DeleteMapping(value = "/delete-movie/{id}", produces = {"application/json", "application/xml"})
     public ResponseEntity<String> deleteMovie(@PathVariable long id, @RequestHeader("Accept") String acceptHeader) {
         String response = "application/xml".equalsIgnoreCase(acceptHeader) ? xmlAdapter.deleteMovie(id) : jsonAdapter.deleteMovie(id);
         return ResponseEntity.ok(response);
     }
+    */
 
 
     //facade for creating movie with genres and rating

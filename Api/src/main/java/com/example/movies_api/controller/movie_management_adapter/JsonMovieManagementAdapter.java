@@ -36,4 +36,10 @@ public class JsonMovieManagementAdapter implements MovieManagementAdapter {
         movieService.updateMovie(movieId, updateMovieDto);
         return "{\"message\": \"Movie updated successfully\"}";
     }
+
+
+    //Open-Close Principle 1/3 (data steering) [added lines]
+    public String getSupportedContentType() {
+        return "application/json";
+    }
 }

@@ -39,4 +39,9 @@ public class XmlMovieManagementAdapter implements MovieManagementAdapter {
         movieService.updateMovie(movieId, updateMovieDto);
         return "<response><message>Movie updated successfully</message></response>";
     }
+
+    //Open-Close Principle 1/3 (data steering) [added lines]
+    public String getSupportedContentType() {
+        return "application/xml";
+    }
 }
