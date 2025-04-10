@@ -64,11 +64,7 @@ public class ReviewManager {
 
         userService.registerUser(request.getUser());
 
-        String review = reviewService.createReview(
-                request.getMovieTitle(),
-                request.getRating(),
-                request.getReviewText(),
-                request.getUser().getUsername());
+        String review = reviewService.createReview(request);
 
         if (request.isWriteToFile()) {
             fileWriterService.writeToFile(review, request.getFilename());
