@@ -7,6 +7,8 @@ import com.example.movies_api.exception.BadRequestException;
 import com.example.movies_api.exception.ResourceNotFoundException;
 import com.example.movies_api.mapper.GenreDtoMapper;
 import com.example.movies_api.model.Genre;
+import com.example.movies_api.open_close.GenreFormatter;
+import com.example.movies_api.open_close.SimpleGenreFormatter;
 import com.example.movies_api.repository.GenreRepository;
 import com.example.movies_api.repository.MovieRepository;
 import com.example.movies_api.visitor.MovieCountGenreVisitor;
@@ -27,6 +29,7 @@ public class GenreService {
     private final GenreDtoMapper genreDtoMapper;
     private final MovieRepository movieRepository;
     private final GenreVisitorService genreVisitorService;
+    private final GenreFormatter genreFormatter = new SimpleGenreFormatter();
 
     public GenreDto findGenreByName(String name) {
         return genreRepository.findByNameIgnoreCase(name)
@@ -178,4 +181,11 @@ public class GenreService {
     //     root.accept(visitor);
     //     return visitor.getReport();
     // }
+
+    public String getFormattedGenre(Long rootId) {
+        Genre root = genreRepository.findById(rootId)
+                .orElseThrow(() -> new RuntimeException("Gatunek nie znaleziony: " + rootId));
+        // Przykładowo, metoda show() w Genre mogłaby mieć przeciążenie przyjmujące formatter:
+        return genreFormatter.format(root);
+    }
 }
