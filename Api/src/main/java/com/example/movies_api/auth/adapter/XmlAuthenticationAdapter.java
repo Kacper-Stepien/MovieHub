@@ -33,4 +33,20 @@ public class XmlAuthenticationAdapter implements AuthenticationAdapter {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         return authenticationService.authenticate(request);
     }
+    //Open-Close Principle 3/3 (data steering) [added lines]
+    @Override
+    public AuthenticationResponse authenticateFromRaw(String rawBody) {
+        try {
+            AuthenticationRequest request = xmlMapper.readValue(rawBody, AuthenticationRequest.class);
+            return authenticate(request);
+        } catch (IOException e) {
+            throw new RuntimeException("Invalid XML format", e);
+        }
+    }
+
+    //Open-Close Principle 3/3 (data steering) [added lines]
+    @Override
+    public String getSupportedContentType() {
+        return "application/xml";
+    }
 }

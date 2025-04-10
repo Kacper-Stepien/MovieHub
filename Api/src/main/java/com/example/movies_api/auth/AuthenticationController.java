@@ -1,5 +1,6 @@
 package com.example.movies_api.auth;
 
+import com.example.movies_api.auth.adapter.AuthenticationAdapter;
 import com.example.movies_api.auth.adapter.JsonAuthenticationAdapter;
 import com.example.movies_api.auth.adapter.XmlAuthenticationAdapter;
 import com.example.movies_api.command.LogCommand;
@@ -12,10 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import com.example.movies_api.auth.adapter.AuthAdapterRegistry;
 
 
 //Added adapter for authenticating users via XML-based requests
@@ -28,6 +27,47 @@ public class AuthenticationController {
     private final JsonAuthenticationAdapter jsonAdapter;
     private final XmlAuthenticationAdapter xmlAdapter;
 
+    //Open-Close Principle 3/3 (data steering) [added lines]
+    private final AuthAdapterRegistry adapterRegistry;
+
+
+    //Open-Close Principle 3/3 (data steering) [modified endpoint]
+    @PostMapping(value = "/register", consumes = {"application/json"})
+    public ResponseEntity<?> register(
+            @Valid @RequestBody RegisterRequest registerRequest,
+            BindingResult result
+    ) {
+        ResponseEntity<?> errors = ValidationService.getInstance().validate(result);
+        if (errors != null) {
+            return errors;
+        }
+
+        LogCommand logCommand = new LogUserRegisterCommand(registerRequest);
+        logCommand.execute(new FileLogWriter());
+
+        return ResponseEntity.ok(authenticationService.register(registerRequest));
+    }
+
+    //Open-Close Principle 3/3 (data steering) [modified endpoint]
+    @PostMapping(value = "/authenticate", consumes = {"application/json", "application/xml"})
+    public ResponseEntity<?> authenticate(
+            @RequestBody String rawBody,
+            @RequestHeader("Content-Type") String contentType
+    ) {
+        AuthenticationAdapter adapter = adapterRegistry.getAdapter(contentType);
+        if (adapter == null) {
+            return ResponseEntity.badRequest().body("Unsupported Content-Type: " + contentType);
+        }
+
+        LogCommand logCommand = new LogUserLoginCommand(rawBody);
+        logCommand.execute(new FileLogWriter());
+
+        AuthenticationResponse response = adapter.authenticateFromRaw(rawBody);
+        return ResponseEntity.ok(response);
+    }
+
+
+    /*
     @PostMapping("/register")
     public ResponseEntity<?> register(
             @Valid @RequestBody RegisterRequest registerRequest,
@@ -74,6 +114,7 @@ public class AuthenticationController {
 
         return ResponseEntity.ok(xmlAdapter.authenticateXml(xmlRequest));
     }
+    */
 }
 
 
