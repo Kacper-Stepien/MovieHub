@@ -15,6 +15,8 @@ import com.example.movies_api.model.Genre;
 import com.example.movies_api.model.Movie;
 import com.example.movies_api.movie_data_provider.ExternalMovieProvider;
 import com.example.movies_api.movie_data_provider.LocalMovieProvider;
+import com.example.movies_api.open_close.DefaultMovieRankingStrategy;
+import com.example.movies_api.open_close.MovieRankingStrategy;
 import com.example.movies_api.proxy.MovieDataProxy;
 import com.example.movies_api.repository.GenreRepository;
 import com.example.movies_api.repository.MovieRepository;
@@ -47,6 +49,7 @@ public class MovieService {
     private final MovieRepository movieRepository;
     private final GenreRepository genreRepository;
     private final MovieDtoMapper mapper;
+    private final MovieRankingStrategy rankingStrategy = new DefaultMovieRankingStrategy();
 
     private final LocalMovieProvider localMovieProvider;
     private final ExternalMovieProvider externalMovieProvider;
@@ -149,6 +152,9 @@ public class MovieService {
 
         // Using State pattern to set the state of the movie
         assignMovieState(movie, movieToSave.getReleaseYear());
+
+        double ranking = rankingStrategy.calculateRanking(movie);
+        movie.setPromoted(ranking >= 7.0);
 
         Genre genre = genreRepository.findByNameIgnoreCase(movieToSave.getGenre())
                 .orElseThrow(() -> new ResourceNotFoundException(Messages.GENRE_NOT_FOUND));
