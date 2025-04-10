@@ -180,9 +180,9 @@ public class MovieService {
     private void assignMovieState(Movie movie, int releaseYear) {
         int currentYear = java.time.Year.now().getValue();
         if (releaseYear == currentYear) {
-            movie.setState(new NowPlayingState());
+            movie.setState(new UpcomingState());
         } else if (releaseYear < currentYear) {
-            movie.setState(new ArchivedState());
+            movie.setState(new UpcomingState());
         } else {
             movie.setState(new UpcomingState());
         }

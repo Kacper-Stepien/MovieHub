@@ -1,6 +1,6 @@
 package com.example.movies_api.state.movie;
 
-public class ArchivedState implements MovieState {
+public class ArchivedState implements Available, Rateable, Bookable {
     @Override
     public String getAvailabilityMessage() {
         return "Film został usunięty z repertuaru.";

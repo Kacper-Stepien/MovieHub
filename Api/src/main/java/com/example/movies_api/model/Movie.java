@@ -6,7 +6,7 @@ import com.example.movies_api.flyweight.MovieType;
 import com.example.movies_api.flyweight.MovieTypeConverter;
 import com.example.movies_api.open_close.DefaultMovieRankingStrategy;
 import com.example.movies_api.open_close.MovieRankingStrategy;
-import com.example.movies_api.state.movie.MovieState;
+import com.example.movies_api.state.movie.Available;
 import com.example.movies_api.state.movie.UpcomingState;
 
 import jakarta.persistence.*;
@@ -134,7 +134,7 @@ public class Movie implements Video {
     }
 
     @Transient
-    private MovieState state = new UpcomingState(); // domyślnie
+    private UpcomingState state = new UpcomingState(); // domyślnie
 
     // Abstract 3 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -161,11 +161,11 @@ public class Movie implements Video {
 
 
 
-    public void setState(MovieState state) {
+    public void setState(UpcomingState state) {
         this.state = state;
     }
 
-    public MovieState getState() {
+    public Available getState() {
         return this.state;
     }
 
