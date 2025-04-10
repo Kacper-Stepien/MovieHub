@@ -3,6 +3,8 @@ package com.example.movies_api.controller;
 import com.example.movies_api.command.LogCommand;
 import com.example.movies_api.command.trailer.LogTrailerCreateCommand;
 import com.example.movies_api.controller.trailer_adapter.JsonTrailerAdapter;
+import com.example.movies_api.controller.trailer_adapter.TrailerAdapter;
+import com.example.movies_api.controller.trailer_adapter.TrailerAdapterRegistry;
 import com.example.movies_api.controller.trailer_adapter.XmlTrailerAdapter;
 import com.example.movies_api.dto.TrailerDto;
 import com.example.movies_api.exception.BadRequestException;
@@ -20,18 +22,59 @@ import java.util.List;
 @RequestMapping("/trailers")
 public class TrailerController {
 
+    private final TrailerAdapterRegistry adapterRegistry;
+
     private final JsonTrailerAdapter jsonTrailerAdapter;
     private final XmlTrailerAdapter xmlTrailerAdapter;
     private final TrailerService trailerService;
     private final TrailerFacade trailerFacade;
 
-    public TrailerController(JsonTrailerAdapter jsonTrailerAdapter,XmlTrailerAdapter xmlTrailerAdapter,TrailerService trailerService,TrailerFacade trailerFacade) {
+    public TrailerController(JsonTrailerAdapter jsonTrailerAdapter,XmlTrailerAdapter xmlTrailerAdapter,TrailerService trailerService,TrailerFacade trailerFacade,TrailerAdapterRegistry adapterRegistry) {
         this.jsonTrailerAdapter = jsonTrailerAdapter;
         this.xmlTrailerAdapter = xmlTrailerAdapter;
         this.trailerService = trailerService;
         this.trailerFacade = trailerFacade;
+        this.adapterRegistry = adapterRegistry;
     }
 
+
+    //Open-Close Principle 2/3 (data steering) [modified endpoint]
+    @PostMapping(value = "/add", consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
+    public ResponseEntity<String> addTrailer(
+            @RequestBody TrailerDto trailer,
+            @RequestHeader("Content-Type") String contentType,
+            @RequestHeader("Accept") String acceptType) throws Exception {
+
+        TrailerAdapter adapter = adapterRegistry.getAdapter(acceptType);
+        if (adapter == null) {
+            return ResponseEntity.badRequest().body("Unsupported Accept type: " + acceptType);
+        }
+
+        String response = adapter.addTrailer(trailer);
+
+        LogCommand logCommand = new LogTrailerCreateCommand(trailer);
+        logCommand.execute(new FileLogWriter());
+
+        URI savedTrailerUri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(trailer.getId())
+                .toUri();
+
+        return ResponseEntity.created(savedTrailerUri).body(response);
+    }
+
+    //Open-Close Principle 2/3 (data steering) [modified endpoint]
+    @GetMapping(value = "/all", produces = {"application/json", "application/xml"})
+    public ResponseEntity<?> getAllTrailers(@RequestHeader("Accept") String acceptType) throws Exception {
+        TrailerAdapter adapter = adapterRegistry.getAdapter(acceptType);
+        if (adapter == null) {
+            return ResponseEntity.badRequest().body("Unsupported Accept type: " + acceptType);
+        }
+
+        return ResponseEntity.ok(adapter.getAllTrailers());
+    }
+
+    /*  ////Open-Close Principle 2/3 (data steering) [before modification]
     // JSON: Add Trailer
     @PostMapping(value = "/add", consumes = {"application/json", "application/xml"},produces = {"application/json", "application/xml"})
     public ResponseEntity<String> addTrailer(@RequestBody TrailerDto trailer, @RequestHeader("Accept") String acceptHeader) throws Exception {
@@ -57,10 +100,11 @@ public class TrailerController {
     public ResponseEntity<List<TrailerDto>> getTrailers(@RequestParam(required = false, defaultValue = "local") String source) throws Exception {
         return ResponseEntity.ok(trailerService.getTrailers(source));
     }
+    */
 
     /**
-     * Search trailers using the Interpreter pattern
-     * Example query: "TITLE action OR DESCRIPTION exciting"
+     *Search trailers using the Interpreter pattern
+     *Example query: "TITLE action OR DESCRIPTION exciting"
      */
     @GetMapping("/search")
     public ResponseEntity<List<TrailerDto>> searchTrailers(

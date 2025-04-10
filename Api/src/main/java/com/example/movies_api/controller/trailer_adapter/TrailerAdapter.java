@@ -6,4 +6,6 @@ import java.util.List;
 public interface TrailerAdapter {
     String addTrailer(TrailerDto trailerData) throws Exception;
     List<TrailerDto> getAllTrailers() throws Exception;
+    //Open-Close Principle 2/3 (data steering) [added lines]
+    String getSupportedContentType(); // NOWE
 }

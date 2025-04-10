@@ -27,4 +27,10 @@ public class JsonTrailerAdapter implements TrailerAdapter {
     public List<TrailerDto> getAllTrailers() throws Exception {
         return trailerService.findAllTrailers();
     }
+
+    //Open-Close Principle 2/3 (data steering) [added lines]
+    @Override
+    public String getSupportedContentType() {
+        return "application/json";
+    }
 }
