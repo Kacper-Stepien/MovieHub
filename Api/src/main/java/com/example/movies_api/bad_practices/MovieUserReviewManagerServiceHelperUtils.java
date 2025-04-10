@@ -32,6 +32,13 @@ public class MovieUserReviewManagerServiceHelperUtils {
             }
         }
 
+        // if (validate) {
+        //     if (username.length() < 3 || !email.contains("@") || password.length() < 5) {
+        //         System.out.println("Nieprawidłowe dane!");
+        //         return;
+        //     }
+        // }
+
         // tworzenie recenzji
         String review = "Film: " + movieTitle + ", Ocena: " + rating + ", Recenzja: " + reviewText + ", Autor: "
                 + username;
@@ -46,13 +53,29 @@ public class MovieUserReviewManagerServiceHelperUtils {
             }
         }
 
+        // if (writeToFile) {
+        //     try (FileWriter writer = new FileWriter(filename, true)) {
+        //         writer.write(review + "\n");
+        //     } catch (IOException e) {
+        //         System.out.println("Błąd zapisu: " + e.getMessage());
+        //     }
+        // }
+
         // wysyłka e-maila
         if (sendEmail) {
             System.out.println("Wysyłam e-mail do " + email + ": Dziękujemy za recenzję \"" + movieTitle + "\"");
+            // System.out.println("Wysyłam e-mail do " + email + ": Dziękujemy za recenzję \"" + movieTitle + "\"");
         }
+
+        // if (sendEmail) {
+        //     System.out.println("Wysyłam e-mail do " + email + ": Dziękujemy za recenzję \"" + movieTitle + "\"");
+        //     System.out.println("Wysyłam e-mail do " + email + ": Dziękujemy za recenzję \"" + movieTitle + "\"");
+        // }
 
         // zapamiętanie prób logowania (ale po co?)
         System.out.println("Liczba prób: " + attemptNumber);
+        // System.out.println("Liczba prób: " + attemptNumber);
+        // System.out.println("Liczba prób: " + attemptNumber);
 
         // tylko dla testów
         if (attemptNumber > 100) {
