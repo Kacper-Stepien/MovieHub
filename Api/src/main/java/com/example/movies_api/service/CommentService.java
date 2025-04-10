@@ -12,6 +12,8 @@ import com.example.movies_api.observer.notification.EmailNotificationObserver;
 import com.example.movies_api.observer.notification.InAppNotificationObserver;
 import com.example.movies_api.observer.notification.MovieCommentNotifier;
 import com.example.movies_api.observer.notification.SmsNotificationObserver;
+import com.example.movies_api.open_close.CommentValidator;
+import com.example.movies_api.open_close.DefaultCommentValidator;
 import com.example.movies_api.repository.CommentRepository;
 import com.example.movies_api.repository.MovieRepository;
 import com.example.movies_api.repository.UserRepository;
@@ -30,6 +32,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final MovieRepository movieRepository;
+    private final CommentValidator commentValidator = new DefaultCommentValidator();
 
     public CommentDto addOrUpdateComment(String userEmail, long movieId, String commentContent) {
         Comment commentToSaveOrUpdate = commentRepository.findByUser_EmailAndMovie_Id(userEmail, movieId)
@@ -41,6 +44,9 @@ public class CommentService {
         commentToSaveOrUpdate.setUser(user);
         commentToSaveOrUpdate.setMovie(movie);
         commentToSaveOrUpdate.setContent(commentContent);
+
+        commentValidator.validate(commentToSaveOrUpdate);
+
         commentRepository.save(commentToSaveOrUpdate);
         // Mediator 1 //////////////////////////////////////////////////////////////////////////////////////////////////
         MediatorConfig.MEDIATOR.notify(this, EventType.COMMENT_ADDED);
