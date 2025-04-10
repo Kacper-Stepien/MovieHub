@@ -4,6 +4,8 @@ import com.example.movies_api.crew.CrewGroup;
 import com.example.movies_api.factory.Video;
 import com.example.movies_api.flyweight.MovieType;
 import com.example.movies_api.flyweight.MovieTypeConverter;
+import com.example.movies_api.open_close.DefaultMovieRankingStrategy;
+import com.example.movies_api.open_close.MovieRankingStrategy;
 import com.example.movies_api.state.movie.MovieState;
 import com.example.movies_api.state.movie.UpcomingState;
 
@@ -134,6 +136,31 @@ public class Movie implements Video {
     @Transient
     private MovieState state = new UpcomingState(); // domyślnie
 
+    // Abstract 3 /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//    public boolean isPromotedMovieOld() {
+//        if (this.getRatings() == null || this.getRatings().isEmpty()) {
+//            return false;
+//        }
+//        double avg = this.getRatings().stream()
+//                      .mapToDouble(r -> r.getRating().value())
+//                      .average()
+//                      .orElse(0.0);
+//        return avg >= 7.5;
+//    }
+
+    @Transient
+    private MovieRankingStrategy rankingStrategy = new DefaultMovieRankingStrategy();
+
+
+    public void updatePromotionStatus() {
+        double ranking = rankingStrategy.calculateRanking(this);
+        this.setPromoted(ranking >= 7.0);
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
     public void setState(MovieState state) {
         this.state = state;
     }
@@ -249,6 +276,7 @@ public class Movie implements Video {
             movie.setComments(comments);
             movie.setMovieType(movieType);
             movie.setState(new UpcomingState());
+            movie.updatePromotionStatus();
             return movie;
         }
     }

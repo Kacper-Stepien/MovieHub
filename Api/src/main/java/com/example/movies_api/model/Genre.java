@@ -1,5 +1,7 @@
 package com.example.movies_api.model;
 
+import com.example.movies_api.open_close.GenreFormatter;
+import com.example.movies_api.open_close.SimpleGenreFormatter;
 import com.example.movies_api.visitor.GenreVisitor;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -45,13 +47,25 @@ public class Genre implements Iterable<Genre> {
         child.setParent(null);
     }
 
+    // Abstract 1 //////////////////////////////////////////////////////////////////////////////////////////////////////
+//    public String show(String indent) {
+//        StringBuilder sb = new StringBuilder(indent + "+ " + name);
+//        for (Genre child : children) {
+//            sb.append("\n").append(child.show(indent + "  "));
+//        }
+//        return sb.toString();
+
+
     public String show(String indent) {
-        StringBuilder sb = new StringBuilder(indent + "+ " + name);
+        GenreFormatter formatter = new SimpleGenreFormatter();
+        String formatted = formatter.format(this);
+        StringBuilder sb = new StringBuilder(indent + formatted);
         for (Genre child : children) {
             sb.append("\n").append(child.show(indent + "  "));
         }
         return sb.toString();
     }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public int countSubgenres() {
         int total = children.size();

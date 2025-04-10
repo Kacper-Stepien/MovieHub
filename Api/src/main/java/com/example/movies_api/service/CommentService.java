@@ -32,7 +32,6 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final MovieRepository movieRepository;
-    private final CommentValidator commentValidator = new DefaultCommentValidator();
 
     public CommentDto addOrUpdateComment(String userEmail, long movieId, String commentContent) {
         Comment commentToSaveOrUpdate = commentRepository.findByUser_EmailAndMovie_Id(userEmail, movieId)
@@ -45,7 +44,7 @@ public class CommentService {
         commentToSaveOrUpdate.setMovie(movie);
         commentToSaveOrUpdate.setContent(commentContent);
 
-        commentValidator.validate(commentToSaveOrUpdate);
+        commentToSaveOrUpdate.validate();
 
         commentRepository.save(commentToSaveOrUpdate);
         // Mediator 1 //////////////////////////////////////////////////////////////////////////////////////////////////

@@ -153,9 +153,6 @@ public class MovieService {
         // Using State pattern to set the state of the movie
         assignMovieState(movie, movieToSave.getReleaseYear());
 
-        double ranking = rankingStrategy.calculateRanking(movie);
-        movie.setPromoted(ranking >= 7.0);
-
         Genre genre = genreRepository.findByNameIgnoreCase(movieToSave.getGenre())
                 .orElseThrow(() -> new ResourceNotFoundException(Messages.GENRE_NOT_FOUND));
         movie.setGenre(genre);
