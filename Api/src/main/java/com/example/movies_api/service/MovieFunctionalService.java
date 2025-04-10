@@ -44,9 +44,7 @@ public class MovieFunctionalService {
      * Performs an operation on each movie in the list
      */
     public void processMovies(List<MovieDto> movies, MovieConsumer consumer) {
-        for (MovieDto movie : movies) {
-            consumer.accept(movie);
-        }
+        movies.forEach(movie -> consumer.accept(movie));
     }
 
     /**
