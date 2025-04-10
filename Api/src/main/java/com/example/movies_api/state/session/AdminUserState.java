@@ -1,6 +1,6 @@
 package com.example.movies_api.state.session;
 
-public class AdminUserState implements UserSessionState {
+public class AdminUserState implements UserSessionState,UserSessionState_canBrowseMovies,UserSessionState_canRateMovies,UserSessionState_canDeleteMovies {
 
     @Override
     public boolean canBrowseMovies() {

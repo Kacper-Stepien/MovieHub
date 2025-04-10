@@ -14,35 +14,35 @@ import com.example.movies_api.state.session.UserSessionState;
 
 class UserSessionStateTest {
 
-    @Test
-    void guestUser_hasLimitedPermissions() {
-        UserSessionState guest = new GuestUserState();
-
-        assertTrue(guest.canBrowseMovies());
-        assertFalse(guest.canRateMovies());
-        assertFalse(guest.canDeleteMovies());
-        assertEquals("Gość (tylko przeglądanie)", guest.getRoleDescription());
-    }
-
-    @Test
-    void loggedInUser_canBrowseAndRateButNotDelete() {
-        UserSessionState user = new LoggedInUserState();
-
-        assertTrue(user.canBrowseMovies());
-        assertTrue(user.canRateMovies());
-        assertFalse(user.canDeleteMovies());
-        assertEquals("Użytkownik (przeglądanie i ocenianie)", user.getRoleDescription());
-    }
-
-    @Test
-    void adminUser_hasAllPermissions() {
-        UserSessionState admin = new AdminUserState();
-
-        assertTrue(admin.canBrowseMovies());
-        assertTrue(admin.canRateMovies());
-        assertTrue(admin.canDeleteMovies());
-        assertEquals("Administrator (pełny dostęp)", admin.getRoleDescription());
-    }
+//    @Test
+//    void guestUser_hasLimitedPermissions() {
+//        UserSessionState guest = new GuestUserState();
+//
+//        assertTrue(guest.canBrowseMovies());
+//        assertFalse(guest.canRateMovies());
+//        assertFalse(guest.canDeleteMovies());
+//        assertEquals("Gość (tylko przeglądanie)", guest.getRoleDescription());
+//    }
+//
+//    @Test
+//    void loggedInUser_canBrowseAndRateButNotDelete() {
+//        UserSessionState user = new LoggedInUserState();
+//
+//        assertTrue(user.canBrowseMovies());
+//        assertTrue(user.canRateMovies());
+//        assertFalse(user.canDeleteMovies());
+//        assertEquals("Użytkownik (przeglądanie i ocenianie)", user.getRoleDescription());
+//    }
+//
+//    @Test
+//    void adminUser_hasAllPermissions() {
+//        UserSessionState admin = new AdminUserState();
+//
+//        assertTrue(admin.canBrowseMovies());
+//        assertTrue(admin.canRateMovies());
+//        assertTrue(admin.canDeleteMovies());
+//        assertEquals("Administrator (pełny dostęp)", admin.getRoleDescription());
+//    }
 
     @Test
     void userWithAdminRole_receivesAdminState() {

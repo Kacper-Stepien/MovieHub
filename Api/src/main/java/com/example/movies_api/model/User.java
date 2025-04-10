@@ -3,6 +3,9 @@ package com.example.movies_api.model;
 import com.example.movies_api.memento.user_memento.UserMemento;
 import com.example.movies_api.state.session.UserSessionState;
 
+import com.example.movies_api.state.session.UserSessionState_canBrowseMovies;
+import com.example.movies_api.state.session.UserSessionState_canDeleteMovies;
+import com.example.movies_api.state.session.UserSessionState_canRateMovies;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -96,6 +99,14 @@ public class User implements UserDetails {
     @Transient
     private UserSessionState sessionState;
 
+    //Segregacji interfejsów (1/3) - podmiana działania na interfejsie UserSessionState
+    @Transient
+    private UserSessionState_canBrowseMovies sessionState_canBrowseMovies;
+    @Transient
+    private UserSessionState_canRateMovies sessionState_canRateMovies;
+    @Transient
+    private UserSessionState_canDeleteMovies sessionState_canDeleteMovies;
+
     public void setSessionState(UserSessionState sessionState) {
         this.sessionState = sessionState;
     }
@@ -105,15 +116,15 @@ public class User implements UserDetails {
     }
 
     public boolean canBrowseMovies() {
-        return sessionState != null && sessionState.canBrowseMovies();
+        return sessionState != null && sessionState_canBrowseMovies.canBrowseMovies();
     }
 
     public boolean canRateMovies() {
-        return sessionState != null && sessionState.canRateMovies();
+        return sessionState != null && sessionState_canRateMovies.canRateMovies();
     }
 
     public boolean canDeleteMovies() {
-        return sessionState != null && sessionState.canDeleteMovies();
+        return sessionState != null && sessionState_canDeleteMovies.canDeleteMovies();
     }
 
     public String getRoleDescription() {
