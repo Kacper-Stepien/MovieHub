@@ -1,4 +1,4 @@
-package com.example.movies_api.bad_practices;
+package com.example.movies_api.bad_practices.services;
 
 import java.util.ArrayList;
 import java.util.List;

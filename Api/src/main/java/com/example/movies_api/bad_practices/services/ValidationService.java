@@ -1,4 +1,7 @@
-package com.example.movies_api.bad_practices;
+package com.example.movies_api.bad_practices.services;
+
+import com.example.movies_api.bad_practices.exceptions.InvalidUserDataException;
+import com.example.movies_api.bad_practices.model.User;
 
 public class ValidationService {
     public void validateUser(User user) {

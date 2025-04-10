@@ -1,4 +1,4 @@
-package com.example.movies_api.bad_practices;
+package com.example.movies_api.bad_practices.model;
 
 public class ReviewRequest {
     private final User user;

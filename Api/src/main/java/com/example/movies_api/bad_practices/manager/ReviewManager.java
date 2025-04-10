@@ -1,4 +1,12 @@
-package com.example.movies_api.bad_practices;
+package com.example.movies_api.bad_practices.manager;
+
+import com.example.movies_api.bad_practices.exceptions.TooManyAttemptsException;
+import com.example.movies_api.bad_practices.model.ReviewRequest;
+import com.example.movies_api.bad_practices.services.EmailService;
+import com.example.movies_api.bad_practices.services.FileWriterService;
+import com.example.movies_api.bad_practices.services.ReviewService;
+import com.example.movies_api.bad_practices.services.UserService;
+import com.example.movies_api.bad_practices.services.ValidationService;
 
 // public class ReviewManager {
 //     private final UserService userService = new UserService();

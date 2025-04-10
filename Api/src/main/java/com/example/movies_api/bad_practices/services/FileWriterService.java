@@ -1,4 +1,4 @@
-package com.example.movies_api.bad_practices;
+package com.example.movies_api.bad_practices.services;
 
 import java.io.FileWriter;
 import java.io.IOException;

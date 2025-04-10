@@ -1,4 +1,4 @@
-package com.example.movies_api.bad_practices;
+package com.example.movies_api.bad_practices.services;
 
 public class EmailService {
     public void sendReviewConfirmation(String email, String movieTitle) {

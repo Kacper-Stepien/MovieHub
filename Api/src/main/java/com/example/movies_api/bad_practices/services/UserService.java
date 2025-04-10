@@ -1,7 +1,9 @@
-package com.example.movies_api.bad_practices;
+package com.example.movies_api.bad_practices.services;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.example.movies_api.bad_practices.model.User;
 
 public class UserService {
     private final Map<String, String> userMap = new HashMap<>();
